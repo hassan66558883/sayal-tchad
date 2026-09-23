@@ -6,48 +6,63 @@ on:
   pull_request:
     branches: ["**"]
 
-env:
-  SEYAL_MODULES: >-
-    seyal_base,seyal_security,seyal_product,seyal_partner,seyal_purchase,seyal_stock,seyal_sale,seyal_delivery,seyal_finance,seyal_fleet,seyal_commercial,seyal_hr,seyal_reporting,seyal_dashboard
-
 jobs:
-  seyal-odoo-tests:
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: seyal
+          POSTGRES_PASSWORD: ci_only_password
+          POSTGRES_DB: seyal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://seyal:ci_only_password@localhost:5432/seyal_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: Run Alembic migrations
+        working-directory: backend
+        run: python -m alembic upgrade head
+
+      - name: Run pytest
+        working-directory: backend
+        run: python -m pytest -v
+
+  frontend-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Create .env (identifiants CI ephemeres - jamais utilises hors de ce job)
-        run: |
-          cat > .env <<'EOF'
-          DB_USER=odoo
-          DB_PASSWORD=ci_only_password
-          ODOO_ADMIN_PASSWORD=ci_only_admin_password
-          EOF
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Start PostgreSQL
-        run: docker compose up -d db
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
 
-      - name: Install all SEYAL-TCHAD modules and run their test suites
-        run: |
-          MODULES="$(echo "$SEYAL_MODULES" | tr -d ' \n')"
-          TAGS="/$(echo "$MODULES" | sed 's/,/,\//g')"
-          docker compose run --rm odoo odoo \
-            --test-enable \
-            --stop-after-init \
-            --test-tags "$TAGS" \
-            -i "$MODULES" \
-            -d ci_test_seyal \
-            --db_host db --db_user "$DB_USER_FROM_ENV" --db_password "$DB_PASSWORD_FROM_ENV" \
-            --logfile=/dev/stdout
-        env:
-          DB_USER_FROM_ENV: odoo
-          DB_PASSWORD_FROM_ENV: ci_only_password
+      - name: Type-check and build
+        working-directory: frontend
+        run: npm run build
 
-      - name: Show container logs on failure
-        if: failure()
-        run: docker compose logs --tail=500 odoo db
-
-      - name: Tear down
-        if: always()
-        run: docker compose down -v
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint

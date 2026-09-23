@@ -1,0 +1,254 @@
+:root {
+  --text: #3f3d45;
+  --text-h: #16151a;
+  --bg: #f7f7f9;
+  --panel-bg: #ffffff;
+  --border: #e2e1e6;
+  --accent: #6d3bff;
+  --accent-hover: #5a2ee6;
+  --error: #c0362c;
+  --sidebar-bg: #16151a;
+  --sidebar-text: #cfcdd6;
+  --sidebar-text-active: #ffffff;
+
+  font: 15px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #d4d2d9;
+    --text-h: #f5f4f7;
+    --bg: #0f0f13;
+    --panel-bg: #1a1a20;
+    --border: #2c2b33;
+    --accent: #8a63ff;
+    --accent-hover: #9f7cff;
+    --sidebar-bg: #0b0b0e;
+    --sidebar-text: #9d9ba6;
+    --sidebar-text-active: #ffffff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: 24px;
+  color: var(--text-h);
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-size: 16px;
+  color: var(--text-h);
+  margin: 0 0 12px;
+}
+
+.error {
+  color: var(--error);
+  font-size: 14px;
+}
+
+/* Login */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-card h1 {
+  margin-bottom: 0;
+  font-size: 20px;
+}
+
+.login-card .subtitle {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.login-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.login-card input,
+.inline-form input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.login-card button,
+.inline-form button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.login-card button:hover,
+.inline-form button:hover {
+  background: var(--accent-hover);
+}
+
+.page-loading {
+  padding: 32px;
+  text-align: center;
+}
+
+/* App shell */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .brand {
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0 20px 20px;
+  color: var(--sidebar-text-active);
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar nav a {
+  color: var(--sidebar-text);
+  text-decoration: none;
+  padding: 10px 20px;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  color: var(--sidebar-text-active);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+
+.topbar button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.content {
+  padding: 24px;
+  flex: 1;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.data-table th {
+  background: var(--bg);
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+/* Forms */
+.inline-form {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+}
+
+.role-picker {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.role-picker legend {
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.role-picker label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}

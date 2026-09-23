@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_seyal_partner_user,seyal.partner.user,model_seyal_partner,base.group_user,1,0,0,0
-access_seyal_partner_ventes,seyal.partner.ventes,model_seyal_partner,seyal_security.group_seyal_ventes,1,1,1,0
-access_seyal_partner_achats,seyal.partner.achats,model_seyal_partner,seyal_security.group_seyal_achats,1,1,1,0
-access_seyal_partner_comptable,seyal.partner.comptable,model_seyal_partner,seyal_security.group_seyal_comptable,1,1,0,0
-access_seyal_partner_manager,seyal.partner.manager,model_seyal_partner,base.group_system,1,1,1,1

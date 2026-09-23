@@ -1,30 +1,15 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:16
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: seyal_dev
+      POSTGRES_USER: ${DB_USER:-seyal}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - ste_db_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  odoo:
-    image: odoo:17.0
-    depends_on:
-      - db
-    environment:
-      HOST: db
-      USER: ${DB_USER}
-      PASSWORD: ${DB_PASSWORD}
     ports:
-      - "8069:8069"
+      - "5432:5432"
     volumes:
-      - ./addons:/mnt/extra-addons
-      - ste_odoo_data:/var/lib/odoo
-      - ./odoo.conf:/etc/odoo/odoo.conf:ro
+      - seyal_db_data:/var/lib/postgresql/data
     restart: unless-stopped
 
 volumes:
-  ste_db_data:
-  ste_odoo_data:
+  seyal_db_data:

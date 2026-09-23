@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <menuitem id="menu_seyal_customer" name="Clients" parent="seyal_base.menu_seyal_root"
-              action="action_seyal_customer" sequence="20"/>
-    <menuitem id="menu_seyal_supplier" name="Fournisseurs" parent="seyal_base.menu_seyal_root"
-              action="action_seyal_supplier" sequence="30"/>
-</odoo>

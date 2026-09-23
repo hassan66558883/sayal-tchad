@@ -1,11 +1,26 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+
+# Env / secrets
 .env
 secrets/
-*.log
+
+# Editors / OS
 .vscode/
 .idea/
-odoo-data/
+*.log
+.DS_Store
+
+# DB / backups
 backups/
+
 .claude/settings.local.json

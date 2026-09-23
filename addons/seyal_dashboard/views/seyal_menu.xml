@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- sequence=5 : juste apres le menu racine, avant les modules
-         operationnels - meme choix que ste_dashboard dans ce depot. -->
-    <menuitem id="menu_seyal_dashboard" name="Tableau de bord" parent="seyal_base.menu_seyal_root"
-              action="action_seyal_dashboard" sequence="5"/>
-</odoo>
