@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seyal_commercial_root" name="Commercial" parent="seyal_base.menu_seyal_root" sequence="13"/>
+
+    <menuitem id="menu_seyal_partner_portfolio" name="Mon portefeuille" parent="menu_seyal_commercial_root"
+              action="action_seyal_partner_portfolio" sequence="10"/>
+    <menuitem id="menu_seyal_sales_target" name="Objectifs" parent="menu_seyal_commercial_root"
+              action="action_seyal_sales_target" sequence="20"/>
+    <menuitem id="menu_seyal_commission" name="Commissions" parent="menu_seyal_commercial_root"
+              action="action_seyal_commission" sequence="30"/>
+    <menuitem id="menu_seyal_commission_rule" name="Baremes de commission" parent="menu_seyal_commercial_root"
+              action="action_seyal_commission_rule" sequence="40"/>
+</odoo>

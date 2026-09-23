@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_product_brand_tree" model="ir.ui.view">
+        <field name="name">seyal.product.brand.tree</field>
+        <field name="model">seyal.product.brand</field>
+        <field name="arch" type="xml">
+            <tree string="Marques">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_product_brand_form" model="ir.ui.view">
+        <field name="name">seyal.product.brand.form</field>
+        <field name="model">seyal.product.brand</field>
+        <field name="arch" type="xml">
+            <form string="Marque">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_product_brand" model="ir.actions.act_window">
+        <field name="name">Marques</field>
+        <field name="res_model">seyal.product.brand</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_bank_account_tree" model="ir.ui.view">
+        <field name="name">seyal.bank.account.tree</field>
+        <field name="model">seyal.bank.account</field>
+        <field name="arch" type="xml">
+            <tree string="Comptes bancaires">
+                <field name="name"/>
+                <field name="bank_name"/>
+                <field name="account_number"/>
+                <field name="branch_id"/>
+                <field name="balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_bank_account_form" model="ir.ui.view">
+        <field name="name">seyal.bank.account.form</field>
+        <field name="model">seyal.bank.account</field>
+        <field name="arch" type="xml">
+            <form string="Compte bancaire">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="bank_name"/>
+                        <field name="account_number"/>
+                        <field name="branch_id"/>
+                        <field name="balance"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_bank_account" model="ir.actions.act_window">
+        <field name="name">Comptes bancaires</field>
+        <field name="res_model">seyal.bank.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

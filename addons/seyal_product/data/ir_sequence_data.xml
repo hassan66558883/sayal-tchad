@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_product" model="ir.sequence">
+        <field name="name">Produit SEYAL-TCHAD</field>
+        <field name="code">seyal.product</field>
+        <field name="prefix">PRD</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

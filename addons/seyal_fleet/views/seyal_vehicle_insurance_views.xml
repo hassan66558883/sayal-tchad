@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_vehicle_insurance_tree" model="ir.ui.view">
+        <field name="name">seyal.vehicle.insurance.tree</field>
+        <field name="model">seyal.vehicle.insurance</field>
+        <field name="arch" type="xml">
+            <tree string="Assurances">
+                <field name="vehicle_id"/>
+                <field name="policy_number"/>
+                <field name="insurer"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="cost"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_vehicle_insurance_form" model="ir.ui.view">
+        <field name="name">seyal.vehicle.insurance.form</field>
+        <field name="model">seyal.vehicle.insurance</field>
+        <field name="arch" type="xml">
+            <form string="Assurance">
+                <sheet>
+                    <group>
+                        <field name="vehicle_id"/>
+                        <field name="policy_number"/>
+                        <field name="insurer"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="cost"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_vehicle_insurance" model="ir.actions.act_window">
+        <field name="name">Assurances</field>
+        <field name="res_model">seyal.vehicle.insurance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

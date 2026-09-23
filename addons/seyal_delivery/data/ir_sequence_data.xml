@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_delivery_route" model="ir.sequence">
+        <field name="name">Tournee de livraison SEYAL-TCHAD</field>
+        <field name="code">seyal.delivery.route</field>
+        <field name="prefix">TRN</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_delivery" model="ir.sequence">
+        <field name="name">Livraison SEYAL-TCHAD</field>
+        <field name="code">seyal.delivery</field>
+        <field name="prefix">LIV</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

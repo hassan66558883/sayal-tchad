@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- sequence=2 : ne dispute pas la page d'atterrissage par defaut a STE
+         (menu_ste_root, sequence=1 - decision deliberee documentee dans
+         ste_base/ste_dashboard). Les deux ERP cohabitent dans la meme
+         instance sans que l'un ne masque l'autre au menu. -->
+    <menuitem id="menu_seyal_root" name="SEYAL-TCHAD" sequence="2"/>
+
+    <menuitem id="menu_seyal_administration" name="Administration" parent="menu_seyal_root" sequence="95"/>
+
+    <menuitem id="menu_seyal_branch" name="Agences" parent="menu_seyal_administration"
+              action="action_seyal_branch" sequence="10"/>
+</odoo>

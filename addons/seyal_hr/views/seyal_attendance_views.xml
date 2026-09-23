@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_attendance_tree" model="ir.ui.view">
+        <field name="name">seyal.attendance.tree</field>
+        <field name="model">seyal.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Presences">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="hours_worked"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_attendance_form" model="ir.ui.view">
+        <field name="name">seyal.attendance.form</field>
+        <field name="model">seyal.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Presence">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                        <field name="hours_worked"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_attendance" model="ir.actions.act_window">
+        <field name="name">Presences</field>
+        <field name="res_model">seyal.attendance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

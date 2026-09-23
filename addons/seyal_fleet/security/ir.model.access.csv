@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_seyal_fuel_record_user,seyal.fuel.record.user,model_seyal_fuel_record,base.group_user,1,0,0,0
+access_seyal_fuel_record_logistique,seyal.fuel.record.logistique,model_seyal_fuel_record,seyal_security.group_seyal_logistique,1,1,1,0
+access_seyal_fuel_record_chauffeur,seyal.fuel.record.chauffeur,model_seyal_fuel_record,seyal_security.group_seyal_chauffeur,1,0,1,0
+access_seyal_fuel_record_manager,seyal.fuel.record.manager,model_seyal_fuel_record,base.group_system,1,1,1,1
+access_seyal_vehicle_maintenance_user,seyal.vehicle.maintenance.user,model_seyal_vehicle_maintenance,base.group_user,1,0,0,0
+access_seyal_vehicle_maintenance_logistique,seyal.vehicle.maintenance.logistique,model_seyal_vehicle_maintenance,seyal_security.group_seyal_logistique,1,1,1,0
+access_seyal_vehicle_maintenance_manager,seyal.vehicle.maintenance.manager,model_seyal_vehicle_maintenance,base.group_system,1,1,1,1
+access_seyal_vehicle_insurance_user,seyal.vehicle.insurance.user,model_seyal_vehicle_insurance,base.group_user,1,0,0,0
+access_seyal_vehicle_insurance_logistique,seyal.vehicle.insurance.logistique,model_seyal_vehicle_insurance,seyal_security.group_seyal_logistique,1,1,1,0
+access_seyal_vehicle_insurance_manager,seyal.vehicle.insurance.manager,model_seyal_vehicle_insurance,base.group_system,1,1,1,1
+access_seyal_vehicle_document_user,seyal.vehicle.document.user,model_seyal_vehicle_document,base.group_user,1,0,0,0
+access_seyal_vehicle_document_logistique,seyal.vehicle.document.logistique,model_seyal_vehicle_document,seyal_security.group_seyal_logistique,1,1,1,0
+access_seyal_vehicle_document_manager,seyal.vehicle.document.manager,model_seyal_vehicle_document,base.group_system,1,1,1,1

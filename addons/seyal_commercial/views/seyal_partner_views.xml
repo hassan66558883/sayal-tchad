@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Filtre de confort, pas une restriction d'acces : le role Ventes
+         garde l'acces large deja accorde en Phase 5 (seyal_partner). -->
+    <record id="action_seyal_partner_portfolio" model="ir.actions.act_window">
+        <field name="name">Mon portefeuille</field>
+        <field name="res_model">seyal.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('salesperson_id', '=', uid), ('is_customer', '=', True)]</field>
+    </record>
+</odoo>

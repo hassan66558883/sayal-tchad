@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_leave_tree" model="ir.ui.view">
+        <field name="name">seyal.leave.tree</field>
+        <field name="model">seyal.leave</field>
+        <field name="arch" type="xml">
+            <tree string="Conges/Absences" decoration-muted="state == 'refused'">
+                <field name="reference"/>
+                <field name="employee_id"/>
+                <field name="leave_type"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="days"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_leave_form" model="ir.ui.view">
+        <field name="name">seyal.leave.form</field>
+        <field name="model">seyal.leave</field>
+        <field name="arch" type="xml">
+            <form string="Conge/Absence">
+                <header>
+                    <button name="action_approve" type="object" string="Approuver" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_refuse" type="object" string="Refuser"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="leave_type"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="days"/>
+                        <field name="reason"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_leave" model="ir.actions.act_window">
+        <field name="name">Conges/Absences</field>
+        <field name="res_model">seyal.leave</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

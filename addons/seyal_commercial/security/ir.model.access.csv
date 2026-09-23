@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_seyal_commission_rule_user,seyal.commission.rule.user,model_seyal_commission_rule,base.group_user,1,0,0,0
+access_seyal_commission_rule_comptable,seyal.commission.rule.comptable,model_seyal_commission_rule,seyal_security.group_seyal_comptable,1,1,1,0
+access_seyal_commission_rule_manager,seyal.commission.rule.manager,model_seyal_commission_rule,base.group_system,1,1,1,1
+access_seyal_sales_target_user,seyal.sales.target.user,model_seyal_sales_target,base.group_user,1,0,0,0
+access_seyal_sales_target_ventes,seyal.sales.target.ventes,model_seyal_sales_target,seyal_security.group_seyal_ventes,1,0,0,0
+access_seyal_sales_target_direction,seyal.sales.target.direction,model_seyal_sales_target,seyal_security.group_seyal_direction_generale,1,1,1,0
+access_seyal_sales_target_manager,seyal.sales.target.manager,model_seyal_sales_target,base.group_system,1,1,1,1
+access_seyal_commission_user,seyal.commission.user,model_seyal_commission,base.group_user,1,0,0,0
+access_seyal_commission_ventes,seyal.commission.ventes,model_seyal_commission,seyal_security.group_seyal_ventes,1,0,0,0
+access_seyal_commission_comptable,seyal.commission.comptable,model_seyal_commission,seyal_security.group_seyal_comptable,1,1,1,0
+access_seyal_commission_manager,seyal.commission.manager,model_seyal_commission,base.group_system,1,1,1,1

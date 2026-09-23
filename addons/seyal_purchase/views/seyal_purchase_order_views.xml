@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_purchase_order_tree" model="ir.ui.view">
+        <field name="name">seyal.purchase.order.tree</field>
+        <field name="model">seyal.purchase.order</field>
+        <field name="arch" type="xml">
+            <tree string="Commandes d'achat" decoration-muted="state == 'cancelled'">
+                <field name="reference"/>
+                <field name="supplier_id"/>
+                <field name="order_date"/>
+                <field name="branch_id"/>
+                <field name="is_import"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_purchase_order_form" model="ir.ui.view">
+        <field name="name">seyal.purchase.order.form</field>
+        <field name="model">seyal.purchase.order</field>
+        <field name="arch" type="xml">
+            <form string="Commande d'achat">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirmer" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Marquer terminee" class="oe_highlight"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" type="object" string="Annuler"
+                            invisible="state in ('done', 'cancelled')"/>
+                    <button name="action_reset_to_draft" type="object" string="Remettre en Proforma"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations generales">
+                            <field name="supplier_id"/>
+                            <field name="order_date"/>
+                            <field name="branch_id"/>
+                            <field name="is_import"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lignes">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="amount_total"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_seyal_purchase_order_search" model="ir.ui.view">
+        <field name="name">seyal.purchase.order.search</field>
+        <field name="model">seyal.purchase.order</field>
+        <field name="arch" type="xml">
+            <search string="Commandes d'achat">
+                <field name="reference"/>
+                <field name="supplier_id"/>
+                <field name="branch_id"/>
+                <filter string="Importations" name="filter_import" domain="[('is_import','=',True)]"/>
+                <filter string="Proforma" name="filter_draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmees" name="filter_confirmed" domain="[('state','=','confirmed')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Fournisseur" name="group_supplier" context="{'group_by': 'supplier_id'}"/>
+                    <filter string="Statut" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_seyal_purchase_order" model="ir.actions.act_window">
+        <field name="name">Commandes d'achat</field>
+        <field name="res_model">seyal.purchase.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

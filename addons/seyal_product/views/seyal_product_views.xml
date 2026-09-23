@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_product_tree" model="ir.ui.view">
+        <field name="name">seyal.product.tree</field>
+        <field name="model">seyal.product</field>
+        <field name="arch" type="xml">
+            <tree string="Produits">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="brand_id"/>
+                <field name="uom_id"/>
+                <field name="sale_price"/>
+                <field name="min_stock_qty"/>
+                <field name="active" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_product_form" model="ir.ui.view">
+        <field name="name">seyal.product.form</field>
+        <field name="model">seyal.product</field>
+        <field name="arch" type="xml">
+            <form string="Produit">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                        <h2><field name="name" placeholder="Nom du produit"/></h2>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="category_id"/>
+                            <field name="brand_id"/>
+                            <field name="barcode"/>
+                        </group>
+                        <group string="Unites">
+                            <field name="uom_id"/>
+                            <field name="uom_po_id"/>
+                            <field name="tracking"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Prix">
+                            <field name="purchase_price"/>
+                            <field name="cost_price"/>
+                            <field name="sale_price"/>
+                            <field name="wholesale_price"/>
+                            <field name="retail_price"/>
+                        </group>
+                        <group name="group_stock" string="Stock">
+                            <field name="min_stock_qty"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_seyal_product_search" model="ir.ui.view">
+        <field name="name">seyal.product.search</field>
+        <field name="model">seyal.product</field>
+        <field name="arch" type="xml">
+            <search string="Produits">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="barcode"/>
+                <field name="category_id"/>
+                <field name="brand_id"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Categorie" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Marque" name="group_brand" context="{'group_by': 'brand_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_seyal_product" model="ir.actions.act_window">
+        <field name="name">Produits</field>
+        <field name="res_model">seyal.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_employee_tree" model="ir.ui.view">
+        <field name="name">seyal.employee.tree</field>
+        <field name="model">seyal.employee</field>
+        <field name="arch" type="xml">
+            <tree string="Employes">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="job_position_id"/>
+                <field name="department_id"/>
+                <field name="branch_id"/>
+                <field name="phone"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_employee_form" model="ir.ui.view">
+        <field name="name">seyal.employee.form</field>
+        <field name="model">seyal.employee</field>
+        <field name="arch" type="xml">
+            <form string="Employe">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Matricule</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                        <h2><field name="name" placeholder="Nom de l'employe"/></h2>
+                    </div>
+                    <group>
+                        <group string="Affectation">
+                            <field name="job_position_id"/>
+                            <field name="department_id"/>
+                            <field name="branch_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Informations">
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="hire_date"/>
+                            <field name="salary"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_employee" model="ir.actions.act_window">
+        <field name="name">Employes</field>
+        <field name="res_model">seyal.employee</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

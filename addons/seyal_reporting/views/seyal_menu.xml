@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seyal_reporting_root" name="Rapports" parent="seyal_base.menu_seyal_root" sequence="90"/>
+
+    <menuitem id="menu_seyal_report_export_wizard" name="Exporter un rapport" parent="menu_seyal_reporting_root"
+              action="action_seyal_report_export_wizard" sequence="10"/>
+</odoo>

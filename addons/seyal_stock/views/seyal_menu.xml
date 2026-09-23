@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seyal_stock_root" name="Stocks" parent="seyal_base.menu_seyal_root" sequence="17"/>
+
+    <menuitem id="menu_seyal_stock_move" name="Mouvements" parent="menu_seyal_stock_root"
+              action="action_seyal_stock_move" sequence="10"/>
+    <menuitem id="menu_seyal_stock_inventory" name="Inventaires" parent="menu_seyal_stock_root"
+              action="action_seyal_stock_inventory" sequence="20"/>
+    <menuitem id="menu_seyal_warehouse" name="Entrepots" parent="menu_seyal_stock_root"
+              action="action_seyal_warehouse" sequence="30"/>
+    <menuitem id="menu_seyal_stock_lot" name="Lots" parent="menu_seyal_stock_root"
+              action="action_seyal_stock_lot" sequence="40"/>
+</odoo>

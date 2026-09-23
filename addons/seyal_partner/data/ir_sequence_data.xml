@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_partner" model="ir.sequence">
+        <field name="name">Tiers SEYAL-TCHAD</field>
+        <field name="code">seyal.partner</field>
+        <field name="prefix">PAR</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

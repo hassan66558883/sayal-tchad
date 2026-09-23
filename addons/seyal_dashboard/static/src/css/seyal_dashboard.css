@@ -1,0 +1,118 @@
+.o_seyal_dashboard {
+    padding: 24px 32px;
+    background-color: #F4F6F8;
+    /* This is a registry("actions") client action component, not a normal
+       Odoo view - Odoo does NOT wrap those in its own scrollable .o_content
+       (that wrapper only exists for list/form/kanban view controllers).
+       .o_action_manager and its ancestors are overflow:hidden by design, so
+       WE must be the scroll container ourselves: height 100% of the space
+       Odoo gives us (not min-height, which lets content grow past it with
+       nowhere to scroll) + overflow-y auto. Without this, the page looks
+       fine until content is taller than the viewport, then mouse-wheel
+       scrolling silently does nothing - same fix already applied to
+       ste_dashboard in this repo. */
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.o_seyal_dashboard_header {
+    margin-bottom: 24px;
+}
+
+.o_seyal_dashboard_header h2 {
+    color: #21295C;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.o_seyal_dashboard_subtitle {
+    color: #5B6B7A;
+    font-size: .9rem;
+}
+
+.o_seyal_dashboard_loading {
+    padding: 40px;
+    text-align: center;
+    color: #5B6B7A;
+}
+
+.o_seyal_dashboard_section {
+    margin-bottom: 28px;
+}
+
+.o_seyal_dashboard_section_title {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #5B6B7A;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.o_seyal_dashboard_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.o_seyal_dashboard_tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+    border-left: 4px solid #B8C2CC;
+}
+
+.o_seyal_dashboard_tile_primary { border-left-color: #0B5FA3; }
+.o_seyal_dashboard_tile_success { border-left-color: #1E8E5A; }
+.o_seyal_dashboard_tile_warning { border-left-color: #C77700; }
+.o_seyal_dashboard_tile_danger { border-left-color: #C22B2B; }
+.o_seyal_dashboard_tile_info { border-left-color: #1C7293; }
+
+.o_seyal_dashboard_tile_icon {
+    font-size: 1.4rem;
+    color: #B8C2CC;
+    width: 32px;
+    text-align: center;
+}
+
+.o_seyal_dashboard_tile_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_seyal_dashboard_value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #21295C;
+}
+
+.o_seyal_dashboard_label {
+    font-size: .8rem;
+    color: #5B6B7A;
+}
+
+.o_seyal_dashboard_chart_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.o_seyal_dashboard_days_buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.o_seyal_dashboard_chart_container {
+    position: relative;
+    height: 320px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}

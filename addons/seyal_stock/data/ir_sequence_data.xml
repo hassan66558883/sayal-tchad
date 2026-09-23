@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_stock_move" model="ir.sequence">
+        <field name="name">Mouvement de stock SEYAL-TCHAD</field>
+        <field name="code">seyal.stock.move</field>
+        <field name="prefix">MVT</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_stock_inventory" model="ir.sequence">
+        <field name="name">Inventaire SEYAL-TCHAD</field>
+        <field name="code">seyal.stock.inventory</field>
+        <field name="prefix">INV</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

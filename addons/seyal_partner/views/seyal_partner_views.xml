@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_partner_tree" model="ir.ui.view">
+        <field name="name">seyal.partner.tree</field>
+        <field name="model">seyal.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Tiers">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="customer_type" widget="badge" optional="show"/>
+                <field name="branch_id"/>
+                <field name="phone"/>
+                <field name="salesperson_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_partner_form" model="ir.ui.view">
+        <field name="name">seyal.partner.form</field>
+        <field name="model">seyal.partner</field>
+        <field name="arch" type="xml">
+            <form string="Tiers">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                        <h2><field name="name" placeholder="Nom du tiers"/></h2>
+                        <field name="is_customer"/>
+                        <field name="is_supplier"/>
+                        <field name="customer_type" invisible="not is_customer"/>
+                    </div>
+                    <group>
+                        <group string="Coordonnees">
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="street"/>
+                            <field name="city"/>
+                            <field name="country_name"/>
+                        </group>
+                        <group string="Gestion commerciale">
+                            <field name="branch_id"/>
+                            <field name="salesperson_id"/>
+                            <field name="credit_limit" invisible="not is_customer"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_seyal_partner_search" model="ir.ui.view">
+        <field name="name">seyal.partner.search</field>
+        <field name="model">seyal.partner</field>
+        <field name="arch" type="xml">
+            <search string="Tiers">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="branch_id"/>
+                <filter string="Clients" name="filter_customers" domain="[('is_customer','=',True)]"/>
+                <filter string="Fournisseurs" name="filter_suppliers" domain="[('is_supplier','=',True)]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Type de client" name="group_customer_type" context="{'group_by': 'customer_type'}"/>
+                    <filter string="Agence" name="group_branch" context="{'group_by': 'branch_id'}"/>
+                    <filter string="Commercial" name="group_salesperson" context="{'group_by': 'salesperson_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_seyal_customer" model="ir.actions.act_window">
+        <field name="name">Clients</field>
+        <field name="res_model">seyal.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_customer', '=', True)]</field>
+        <field name="context">{'default_is_customer': True}</field>
+    </record>
+
+    <record id="action_seyal_supplier" model="ir.actions.act_window">
+        <field name="name">Fournisseurs</field>
+        <field name="res_model">seyal.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_supplier', '=', True)]</field>
+        <field name="context">{'default_is_supplier': True}</field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_employee" model="ir.sequence">
+        <field name="name">Employe SEYAL-TCHAD</field>
+        <field name="code">seyal.employee</field>
+        <field name="prefix">EMP</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_leave" model="ir.sequence">
+        <field name="name">Conge SEYAL-TCHAD</field>
+        <field name="code">seyal.leave</field>
+        <field name="prefix">CNG</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_advance" model="ir.sequence">
+        <field name="name">Avance sur salaire SEYAL-TCHAD</field>
+        <field name="code">seyal.advance</field>
+        <field name="prefix">AVC</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_payslip" model="ir.sequence">
+        <field name="name">Bulletin de salaire SEYAL-TCHAD</field>
+        <field name="code">seyal.payslip</field>
+        <field name="prefix">PAI</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

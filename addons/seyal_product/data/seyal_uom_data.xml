@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Donnees de demonstration illustrant le mecanisme de conditionnement
+         demande dans le cahier des charges ("1 sac = 50 KG"). A completer/
+         adapter par le client avec ses propres categories et unites reelles -
+         RULE "ne pas inventer de donnees commerciales reelles". -->
+    <record id="uom_categ_poids" model="seyal.uom.category">
+        <field name="name">Poids</field>
+    </record>
+
+    <record id="uom_kg" model="seyal.uom">
+        <field name="name">Kilogramme</field>
+        <field name="category_id" ref="uom_categ_poids"/>
+        <field name="is_reference" eval="True"/>
+        <field name="factor">1.0</field>
+    </record>
+
+    <record id="uom_sac_50kg" model="seyal.uom">
+        <field name="name">Sac de 50 kg</field>
+        <field name="category_id" ref="uom_categ_poids"/>
+        <field name="is_reference" eval="False"/>
+        <field name="factor">50.0</field>
+    </record>
+
+    <record id="uom_categ_unite" model="seyal.uom.category">
+        <field name="name">Unite</field>
+    </record>
+
+    <record id="uom_unite" model="seyal.uom">
+        <field name="name">Unite</field>
+        <field name="category_id" ref="uom_categ_unite"/>
+        <field name="is_reference" eval="True"/>
+        <field name="factor">1.0</field>
+    </record>
+</odoo>

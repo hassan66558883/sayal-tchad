@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_inherit_seyal_stock" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.seyal.stock</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Meme ancrage stable que seyal_security/views/res_users_views.xml
+                 (position="inside" sur la page elle-meme, jamais sur
+                 groups_id directement - voir le commentaire de ce fichier
+                 pour l'explication complete). -->
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <group string="Entrepots SEYAL-TCHAD">
+                    <field name="seyal_warehouse_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

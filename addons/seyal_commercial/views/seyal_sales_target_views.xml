@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_sales_target_tree" model="ir.ui.view">
+        <field name="name">seyal.sales.target.tree</field>
+        <field name="model">seyal.sales.target</field>
+        <field name="arch" type="xml">
+            <tree string="Objectifs commerciaux">
+                <field name="reference"/>
+                <field name="salesperson_id"/>
+                <field name="period_start"/>
+                <field name="period_end"/>
+                <field name="target_amount"/>
+                <field name="achieved_amount"/>
+                <field name="achievement_rate" widget="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_sales_target_form" model="ir.ui.view">
+        <field name="name">seyal.sales.target.form</field>
+        <field name="model">seyal.sales.target</field>
+        <field name="arch" type="xml">
+            <form string="Objectif commercial">
+                <header>
+                    <button name="action_compute" type="object" string="Recalculer" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Periode">
+                            <field name="salesperson_id"/>
+                            <field name="branch_id"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                        </group>
+                        <group string="Realisation">
+                            <field name="target_amount"/>
+                            <field name="achieved_amount"/>
+                            <field name="achievement_rate"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_sales_target" model="ir.actions.act_window">
+        <field name="name">Objectifs commerciaux</field>
+        <field name="res_model">seyal.sales.target</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

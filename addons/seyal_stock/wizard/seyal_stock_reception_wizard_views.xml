@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_stock_reception_wizard_form" model="ir.ui.view">
+        <field name="name">seyal.stock.reception.wizard.form</field>
+        <field name="model">seyal.stock.reception.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reception en stock">
+                <group>
+                    <field name="import_id" readonly="1"/>
+                    <field name="warehouse_id"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Generer les entrees de stock"
+                            class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_stock_reception_wizard" model="ir.actions.act_window">
+        <field name="name">Receptionner en stock</field>
+        <field name="res_model">seyal.stock.reception.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

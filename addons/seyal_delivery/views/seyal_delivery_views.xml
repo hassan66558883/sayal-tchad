@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_delivery_tree" model="ir.ui.view">
+        <field name="name">seyal.delivery.tree</field>
+        <field name="model">seyal.delivery</field>
+        <field name="arch" type="xml">
+            <tree string="Livraisons">
+                <field name="reference"/>
+                <field name="customer_id"/>
+                <field name="sale_order_id"/>
+                <field name="route_id"/>
+                <field name="delivery_datetime"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_delivery_form" model="ir.ui.view">
+        <field name="name">seyal.delivery.form</field>
+        <field name="model">seyal.delivery</field>
+        <field name="arch" type="xml">
+            <form string="Livraison">
+                <header>
+                    <button name="action_confirm_delivery" type="object" string="Confirmer la livraison"
+                            class="oe_highlight" invisible="state not in ('chargee', 'en_livraison')"/>
+                    <button name="action_report_issue" type="object" string="Signaler un probleme"
+                            invisible="state in ('livree', 'partielle', 'cloturee', 'probleme')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="planifiee,chargee,en_livraison,livree"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label text-muted">Reference</span>
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Commande">
+                            <field name="sale_order_id"/>
+                            <field name="customer_id" readonly="1"/>
+                            <field name="route_id"/>
+                        </group>
+                        <group string="Preuve de livraison">
+                            <field name="delivery_datetime" readonly="1"/>
+                            <field name="signature" widget="image"/>
+                            <field name="photo" widget="image"/>
+                            <field name="gps_latitude"/>
+                            <field name="gps_longitude"/>
+                        </group>
+                    </group>
+                    <group string="Probleme" invisible="state != 'probleme'">
+                        <field name="issue_description" nolabel="1"/>
+                    </group>
+                    <group string="Signaler un probleme" invisible="state in ('livree', 'partielle', 'cloturee', 'probleme')">
+                        <field name="issue_description" nolabel="1" placeholder="Decrire le probleme avant de cliquer sur 'Signaler un probleme'..."/>
+                    </group>
+                    <notebook>
+                        <page string="Lignes">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="ordered_qty"/>
+                                    <field name="delivered_qty"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_delivery" model="ir.actions.act_window">
+        <field name="name">Livraisons</field>
+        <field name="res_model">seyal.delivery</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_seyal_delivery_mine" model="ir.actions.act_window">
+        <field name="name">Mes livraisons</field>
+        <field name="res_model">seyal.delivery</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('route_id.driver_id.user_id', '=', uid)]</field>
+    </record>
+</odoo>

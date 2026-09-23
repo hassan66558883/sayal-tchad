@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_seyal_dashboard" model="ir.actions.client">
+        <field name="name">Tableau de bord Direction</field>
+        <field name="tag">seyal_dashboard</field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seyal_product_root" name="Produits" parent="seyal_base.menu_seyal_root" sequence="10"/>
+
+    <menuitem id="menu_seyal_product" name="Produits" parent="menu_seyal_product_root"
+              action="action_seyal_product" sequence="10"/>
+    <menuitem id="menu_seyal_product_category" name="Categories" parent="menu_seyal_product_root"
+              action="action_seyal_product_category" sequence="20"/>
+    <menuitem id="menu_seyal_product_brand" name="Marques" parent="menu_seyal_product_root"
+              action="action_seyal_product_brand" sequence="30"/>
+    <menuitem id="menu_seyal_uom" name="Unites de mesure" parent="menu_seyal_product_root"
+              action="action_seyal_uom" sequence="40"/>
+    <menuitem id="menu_seyal_uom_category" name="Categories d'unites" parent="menu_seyal_product_root"
+              action="action_seyal_uom_category" sequence="50"/>
+</odoo>

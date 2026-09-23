@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_supplier_bill" model="ir.sequence">
+        <field name="name">Facture fournisseur SEYAL-TCHAD</field>
+        <field name="code">seyal.supplier.bill</field>
+        <field name="prefix">FRN</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_supplier_payment" model="ir.sequence">
+        <field name="name">Paiement fournisseur SEYAL-TCHAD</field>
+        <field name="code">seyal.supplier.payment</field>
+        <field name="prefix">PFR</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_expense" model="ir.sequence">
+        <field name="name">Depense SEYAL-TCHAD</field>
+        <field name="code">seyal.expense</field>
+        <field name="prefix">DEP</field>
+        <field name="padding">6</field>
+    </record>
+
+    <record id="seq_seyal_cash_transfer" model="ir.sequence">
+        <field name="name">Transfert Caisse/Banque SEYAL-TCHAD</field>
+        <field name="code">seyal.cash.transfer</field>
+        <field name="prefix">TRF</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

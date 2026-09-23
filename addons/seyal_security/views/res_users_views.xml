@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_inherit_seyal_security" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.seyal.security</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Anchored on the page itself (position="inside"), same proven
+                 approach as ste_security/views/res_users_views.xml : the
+                 groups_id field's surrounding arch is dynamically rewritten
+                 at runtime (_update_user_groups_view), so anchoring on it
+                 directly breaks ; the page container is stable. -->
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <group string="Agences SEYAL-TCHAD">
+                    <field name="seyal_branch_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

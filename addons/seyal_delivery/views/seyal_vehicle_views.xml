@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_seyal_vehicle_tree" model="ir.ui.view">
+        <field name="name">seyal.vehicle.tree</field>
+        <field name="model">seyal.vehicle</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicules">
+                <field name="plate_number"/>
+                <field name="name"/>
+                <field name="capacity_kg"/>
+                <field name="branch_id"/>
+                <field name="active" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_seyal_vehicle_form" model="ir.ui.view">
+        <field name="name">seyal.vehicle.form</field>
+        <field name="model">seyal.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicule">
+                <sheet>
+                    <group>
+                        <field name="plate_number"/>
+                        <field name="name"/>
+                        <field name="capacity_kg"/>
+                        <field name="branch_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_seyal_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicules</field>
+        <field name="res_model">seyal.vehicle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

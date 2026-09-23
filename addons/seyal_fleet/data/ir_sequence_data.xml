@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_seyal_fuel_record" model="ir.sequence">
+        <field name="name">Plein de carburant SEYAL-TCHAD</field>
+        <field name="code">seyal.fuel.record</field>
+        <field name="prefix">CAR</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>
