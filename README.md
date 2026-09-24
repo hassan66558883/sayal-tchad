@@ -77,7 +77,7 @@ d'appeler quoi que ce soit manuellement.
 | Phase | Statut | Description |
 | --- | --- | --- |
 | 1 - Architecture, auth, roles, agences, audit | **Fait** (24 tests) | Auth JWT, 10 roles metier, agences (`Branch`) avec restriction par agence, journal d'audit automatique, ecrans Agences/Utilisateurs/Journal d'audit |
-| 2 - Produits, categories, marques, unites, tiers | A faire | |
+| 2 - Produits, categories, marques, unites, tiers | **Fait** (38 tests) | Produits (reference auto PRD######, categories, marques, unite de stockage), categories/unites de mesure avec conversion (`app/services/uom.py`), tiers unifie client/fournisseur (reference TRS######, types de client, restriction par agence pour le role Responsable d'agence), ecrans Produits/Clients \& Fournisseurs |
 | 3 - Achats, importations, conteneurs | A faire | |
 | 4 - Stocks, entrepots, mouvements | A faire | |
 | 5 - Ventes, facturation | A faire | |

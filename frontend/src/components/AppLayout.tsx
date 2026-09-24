@@ -12,6 +12,8 @@ export default function AppLayout() {
           <NavLink to="/" end>
             Agences
           </NavLink>
+          <NavLink to="/products">Produits</NavLink>
+          <NavLink to="/partners">Clients &amp; Fournisseurs</NavLink>
           {hasRole('direction_generale') && (
             <>
               <NavLink to="/users">Utilisateurs</NavLink>
