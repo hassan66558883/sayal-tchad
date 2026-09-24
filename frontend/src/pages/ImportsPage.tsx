@@ -9,6 +9,7 @@ import {
   listPurchaseOrders,
   updateImportCosts,
 } from '../api/purchases'
+import { createReception, listWarehouses } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
 
 const NEXT_LABEL: Record<string, string> = {
@@ -22,17 +23,27 @@ export default function ImportsPage() {
   const { hasRole } = useAuth()
   const queryClient = useQueryClient()
   const canManage = hasRole('achats')
+  const canReceive = hasRole('stock')
 
   const { data: imports } = useQuery({ queryKey: ['imports'], queryFn: listImports })
   const { data: orders } = useQuery({ queryKey: ['purchase-orders'], queryFn: listPurchaseOrders })
   const { data: containers } = useQuery({ queryKey: ['containers'], queryFn: listContainers })
+  const { data: warehouses } = useQuery({ queryKey: ['warehouses'], queryFn: listWarehouses })
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['imports'] })
     queryClient.invalidateQueries({ queryKey: ['products'] })
+    queryClient.invalidateQueries({ queryKey: ['stock-moves'] })
+    queryClient.invalidateQueries({ queryKey: ['product-stock'] })
   }
   const createMutation = useMutation({ mutationFn: createImport, onSuccess: invalidate })
   const advanceMutation = useMutation({ mutationFn: advanceImport, onSuccess: invalidate })
+  const receptionMutation = useMutation({
+    mutationFn: ({ importId, warehouseId }: { importId: number; warehouseId: number }) =>
+      createReception(importId, warehouseId),
+    onSuccess: invalidate,
+  })
+  const [receptionWarehouse, setReceptionWarehouse] = useState<Record<number, string>>({})
   const costsMutation = useMutation({
     mutationFn: ({ id, ...rest }: { id: number; transport_cost: number; customs_cost: number; transit_cost: number; other_costs: number }) =>
       updateImportCosts(id, rest),
@@ -113,6 +124,34 @@ export default function ImportsPage() {
                 <td>
                   {canManage && imp.state !== 'receptionne' && (
                     <button onClick={() => advanceMutation.mutate(imp.id)}>{NEXT_LABEL[imp.state]}</button>
+                  )}
+                  {canReceive && imp.state === 'receptionne' && (
+                    <div style={{ display: 'flex', gap: 4 }}>
+                      <select
+                        value={receptionWarehouse[imp.id] ?? ''}
+                        onChange={(e) =>
+                          setReceptionWarehouse((prev) => ({ ...prev, [imp.id]: e.target.value }))
+                        }
+                      >
+                        <option value="">Entrepot</option>
+                        {warehouses?.map((w) => (
+                          <option key={w.id} value={w.id}>
+                            {w.code}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        disabled={!receptionWarehouse[imp.id]}
+                        onClick={() =>
+                          receptionMutation.mutate({
+                            importId: imp.id,
+                            warehouseId: Number(receptionWarehouse[imp.id]),
+                          })
+                        }
+                      >
+                        Creer la reception
+                      </button>
+                    </div>
                   )}
                 </td>
               </tr>

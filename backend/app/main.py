@@ -14,7 +14,10 @@ from app.routers import (
     product_catalog,
     products,
     purchase_orders,
+    stock_inventories,
+    stock_moves,
     users,
+    warehouses,
 )
 from app.services.audit import register_audit_listeners
 from app.services.seed import seed
@@ -51,6 +54,9 @@ app.include_router(partners.router)
 app.include_router(purchase_orders.router)
 app.include_router(containers.router)
 app.include_router(imports.router)
+app.include_router(warehouses.router)
+app.include_router(stock_moves.router)
+app.include_router(stock_inventories.router)
 
 
 @app.get("/api/health")

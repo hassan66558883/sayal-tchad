@@ -5,6 +5,7 @@ from app.models.partner import Partner
 from app.models.product import Product, ProductBrand, ProductCategory, Uom, UomCategory
 from app.models.purchase import PurchaseOrder, PurchaseOrderLine
 from app.models.sequence import SequenceCounter
+from app.models.stock import StockInventory, StockInventoryLine, StockLot, StockMove, Warehouse
 from app.models.user import Role, User, user_branches, user_roles
 
 __all__ = [
@@ -21,9 +22,14 @@ __all__ = [
     "PurchaseOrderLine",
     "Role",
     "SequenceCounter",
+    "StockInventory",
+    "StockInventoryLine",
+    "StockLot",
+    "StockMove",
     "Uom",
     "UomCategory",
     "User",
+    "Warehouse",
     "user_branches",
     "user_roles",
 ]

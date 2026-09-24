@@ -16,6 +16,9 @@ export default function AppLayout() {
           <NavLink to="/partners">Clients &amp; Fournisseurs</NavLink>
           <NavLink to="/purchase-orders">Commandes d'achat</NavLink>
           <NavLink to="/imports">Importations</NavLink>
+          <NavLink to="/warehouses">Entrepots</NavLink>
+          <NavLink to="/stock-moves">Mouvements de stock</NavLink>
+          <NavLink to="/stock-inventories">Inventaires</NavLink>
           {hasRole('direction_generale') && (
             <>
               <NavLink to="/users">Utilisateurs</NavLink>

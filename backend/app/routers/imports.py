@@ -6,11 +6,15 @@ from app.core.deps import get_current_user, require_roles
 from app.models.import_ import IMPORT_STATE_ORDER, IMPORT_STATES, Container, Import
 from app.models.purchase import PurchaseOrder
 from app.models.user import User
+from app.models.stock import Warehouse
 from app.schemas.import_ import ImportCreate, ImportRead, ImportUpdate
+from app.schemas.stock import StockMoveRead
 from app.services.import_cost import apply_real_cost_to_products
+from app.services.reception import create_reception_moves
 from app.services.sequence import next_reference
 
 PURCHASE_MANAGERS = ("achats", "direction_generale")
+STOCK_MANAGERS = ("stock", "direction_generale")
 
 router = APIRouter(prefix="/api/imports", tags=["imports"])
 
@@ -94,3 +98,29 @@ def advance_import(
     db.commit()
     db.refresh(record)
     return record
+
+
+@router.post("/{import_id}/create-reception", response_model=list[StockMoveRead])
+def create_reception(
+    import_id: int,
+    warehouse_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_roles(*STOCK_MANAGERS)),
+):
+    """Bridges a receptionne import to real stock: one draft "in" move
+    per purchase order line into the given warehouse (the same role
+    seyal.stock.reception.wizard played in the original design).
+    """
+
+    record = db.get(Import, import_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Importation introuvable.")
+    if record.state != "receptionne":
+        raise HTTPException(status_code=400, detail="Seule une importation receptionnee peut generer une reception de stock.")
+    if db.get(Warehouse, warehouse_id) is None:
+        raise HTTPException(status_code=400, detail="Entrepot introuvable.")
+    moves = create_reception_moves(db, record, warehouse_id)
+    db.commit()
+    for move in moves:
+        db.refresh(move)
+    return moves
