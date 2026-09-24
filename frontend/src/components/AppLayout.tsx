@@ -14,6 +14,8 @@ export default function AppLayout() {
           </NavLink>
           <NavLink to="/products">Produits</NavLink>
           <NavLink to="/partners">Clients &amp; Fournisseurs</NavLink>
+          <NavLink to="/purchase-orders">Commandes d'achat</NavLink>
+          <NavLink to="/imports">Importations</NavLink>
           {hasRole('direction_generale') && (
             <>
               <NavLink to="/users">Utilisateurs</NavLink>

@@ -4,7 +4,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import SessionLocal
-from app.routers import audit_logs, auth, branches, partners, product_catalog, products, users
+from app.routers import (
+    audit_logs,
+    auth,
+    branches,
+    containers,
+    imports,
+    partners,
+    product_catalog,
+    products,
+    purchase_orders,
+    users,
+)
 from app.services.audit import register_audit_listeners
 from app.services.seed import seed
 
@@ -37,6 +48,9 @@ app.include_router(audit_logs.router)
 app.include_router(product_catalog.router)
 app.include_router(products.router)
 app.include_router(partners.router)
+app.include_router(purchase_orders.router)
+app.include_router(containers.router)
+app.include_router(imports.router)
 
 
 @app.get("/api/health")

@@ -5,9 +5,11 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './auth/AuthContext'
 import AuditLogsPage from './pages/AuditLogsPage'
 import BranchesPage from './pages/BranchesPage'
+import ImportsPage from './pages/ImportsPage'
 import LoginPage from './pages/LoginPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
+import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
 import UsersPage from './pages/UsersPage'
 
 const queryClient = new QueryClient()
@@ -30,6 +32,8 @@ export default function App() {
               <Route index element={<BranchesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="partners" element={<PartnersPage />} />
+              <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
+              <Route path="imports" element={<ImportsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>

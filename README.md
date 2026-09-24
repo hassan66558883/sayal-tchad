@@ -78,7 +78,7 @@ d'appeler quoi que ce soit manuellement.
 | --- | --- | --- |
 | 1 - Architecture, auth, roles, agences, audit | **Fait** (24 tests) | Auth JWT, 10 roles metier, agences (`Branch`) avec restriction par agence, journal d'audit automatique, ecrans Agences/Utilisateurs/Journal d'audit |
 | 2 - Produits, categories, marques, unites, tiers | **Fait** (38 tests) | Produits (reference auto PRD######, categories, marques, unite de stockage), categories/unites de mesure avec conversion (`app/services/uom.py`), tiers unifie client/fournisseur (reference TRS######, types de client, restriction par agence pour le role Responsable d'agence), ecrans Produits/Clients \& Fournisseurs |
-| 3 - Achats, importations, conteneurs | A faire | |
+| 3 - Achats, importations, conteneurs | **Fait** (57 tests) | Commandes d'achat (reference auto ACH######, workflow Proforma -> Commande -> Terminee/Annulee, lignes produits avec contrainte serveur qty>0), conteneurs, importations (reference IMP######, workflow Nouveau -> Expedie -> Arrive -> Douane -> Receptionne, une seule importation par commande) ; calcul du COUT REEL (montant de la commande + frais transport/douane/transit/autres) ventile au prorata sur `Product.cost_price` a la reception (`app/services/import_cost.py`), ecrans Commandes d'achat/Importations |
 | 4 - Stocks, entrepots, mouvements | A faire | |
 | 5 - Ventes, facturation | A faire | |
 | 6 - Distribution, livraisons, tournees | A faire | |
