@@ -9,6 +9,7 @@ import BranchesPage from './pages/BranchesPage'
 import CashRegistersPage from './pages/CashRegistersPage'
 import DeliveriesPage from './pages/DeliveriesPage'
 import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
+import FleetOperationsPage from './pages/FleetOperationsPage'
 import FleetPage from './pages/FleetPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
@@ -51,6 +52,7 @@ export default function App() {
               <Route path="sale-orders" element={<SaleOrdersPage />} />
               <Route path="invoices" element={<InvoicesPage />} />
               <Route path="fleet" element={<FleetPage />} />
+              <Route path="fleet-operations" element={<FleetOperationsPage />} />
               <Route path="delivery-routes" element={<DeliveryRoutesPage />} />
               <Route path="deliveries" element={<DeliveriesPage />} />
               <Route path="supplier-invoices" element={<SupplierInvoicesPage />} />

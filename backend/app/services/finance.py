@@ -1,9 +1,9 @@
 """Live balances for cash sessions and bank accounts: always summed on
 demand from real, confirmed/validated rows (customer payments, supplier
-payments, expenses, manual bank transactions) - never a stored/cached
-running total, the same anti-pattern avoidance applied throughout this
-project (Phase 4's stock quantities, Phase 5's invoice/customer
-balances).
+payments, expenses, fuel logs, completed vehicle maintenances, manual
+bank transactions) - never a stored/cached running total, the same
+anti-pattern avoidance applied throughout this project (Phase 4's stock
+quantities, Phase 5's invoice/customer balances).
 """
 
 from fastapi import HTTPException
@@ -11,6 +11,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.finance import BankAccount, BankTransaction, CashSession, Expense, SupplierPayment
+from app.models.fleet_ops import FuelLog, VehicleMaintenance
 from app.models.invoice import Payment
 
 
@@ -80,7 +81,19 @@ def get_cash_session_balance(db: Session, session: CashSession) -> float:
             Expense.state == "validated",
         )
     ).scalar_one()
-    return session.opening_balance + cash_in - supplier_out - expenses_out
+    fuel_out = db.execute(
+        select(func.coalesce(func.sum(FuelLog.liters * FuelLog.unit_price), 0.0)).where(
+            FuelLog.cash_session_id == session.id, FuelLog.payment_method == "especes"
+        )
+    ).scalar_one()
+    maintenance_out = db.execute(
+        select(func.coalesce(func.sum(VehicleMaintenance.cost), 0.0)).where(
+            VehicleMaintenance.cash_session_id == session.id,
+            VehicleMaintenance.payment_method == "especes",
+            VehicleMaintenance.state == "terminee",
+        )
+    ).scalar_one()
+    return session.opening_balance + cash_in - supplier_out - expenses_out - fuel_out - maintenance_out
 
 
 def get_bank_account_balance(db: Session, account_id: int, opening_balance: float) -> float:
@@ -115,4 +128,25 @@ def get_bank_account_balance(db: Session, account_id: int, opening_balance: floa
             BankTransaction.bank_account_id == account_id, BankTransaction.movement_type == "out"
         )
     ).scalar_one()
-    return opening_balance + bank_in - supplier_out - expenses_out + manual_in - manual_out
+    fuel_out = db.execute(
+        select(func.coalesce(func.sum(FuelLog.liters * FuelLog.unit_price), 0.0)).where(
+            FuelLog.bank_account_id == account_id, FuelLog.payment_method == "banque"
+        )
+    ).scalar_one()
+    maintenance_out = db.execute(
+        select(func.coalesce(func.sum(VehicleMaintenance.cost), 0.0)).where(
+            VehicleMaintenance.bank_account_id == account_id,
+            VehicleMaintenance.payment_method == "banque",
+            VehicleMaintenance.state == "terminee",
+        )
+    ).scalar_one()
+    return (
+        opening_balance
+        + bank_in
+        - supplier_out
+        - expenses_out
+        + manual_in
+        - manual_out
+        - fuel_out
+        - maintenance_out
+    )

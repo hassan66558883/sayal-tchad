@@ -12,6 +12,7 @@ from app.models.finance import (
     SupplierPayment,
 )
 from app.models.fleet import Driver, Vehicle
+from app.models.fleet_ops import FuelLog, VehicleDocument, VehicleMaintenance
 from app.models.import_ import Container, Import
 from app.models.invoice import Invoice, InvoiceLine, Payment
 from app.models.partner import Partner
@@ -36,6 +37,7 @@ __all__ = [
     "DeliveryRoute",
     "Driver",
     "Expense",
+    "FuelLog",
     "Import",
     "Invoice",
     "InvoiceLine",
@@ -61,6 +63,8 @@ __all__ = [
     "UomCategory",
     "User",
     "Vehicle",
+    "VehicleDocument",
+    "VehicleMaintenance",
     "Warehouse",
     "user_branches",
     "user_roles",

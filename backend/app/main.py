@@ -12,6 +12,7 @@ from app.routers import (
     deliveries,
     finance,
     fleet,
+    fleet_ops,
     imports,
     invoices,
     partners,
@@ -73,6 +74,7 @@ app.include_router(deliveries.router)
 app.include_router(supplier_invoices.router)
 app.include_router(supplier_payments.router)
 app.include_router(finance.router)
+app.include_router(fleet_ops.router)
 
 
 @app.get("/api/health")
