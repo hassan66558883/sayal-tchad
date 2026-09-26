@@ -6,10 +6,12 @@ import { AuthProvider } from './auth/AuthContext'
 import AuditLogsPage from './pages/AuditLogsPage'
 import BranchesPage from './pages/BranchesPage'
 import ImportsPage from './pages/ImportsPage'
+import InvoicesPage from './pages/InvoicesPage'
 import LoginPage from './pages/LoginPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
 import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
+import SaleOrdersPage from './pages/SaleOrdersPage'
 import StockInventoriesPage from './pages/StockInventoriesPage'
 import StockMovesPage from './pages/StockMovesPage'
 import UsersPage from './pages/UsersPage'
@@ -40,6 +42,8 @@ export default function App() {
               <Route path="warehouses" element={<WarehousesPage />} />
               <Route path="stock-moves" element={<StockMovesPage />} />
               <Route path="stock-inventories" element={<StockInventoriesPage />} />
+              <Route path="sale-orders" element={<SaleOrdersPage />} />
+              <Route path="invoices" element={<InvoicesPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>
