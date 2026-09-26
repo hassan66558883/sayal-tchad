@@ -29,6 +29,8 @@ export default function AppLayout() {
           <NavLink to="/supplier-invoices">Dettes fournisseurs</NavLink>
           <NavLink to="/cash-registers">Caisse</NavLink>
           <NavLink to="/bank-accounts">Banque</NavLink>
+          <NavLink to="/hr">Ressources humaines</NavLink>
+          <NavLink to="/reports">Rapports</NavLink>
           {hasRole('direction_generale') && (
             <>
               <NavLink to="/users">Utilisateurs</NavLink>

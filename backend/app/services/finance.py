@@ -1,9 +1,9 @@
 """Live balances for cash sessions and bank accounts: always summed on
 demand from real, confirmed/validated rows (customer payments, supplier
-payments, expenses, fuel logs, completed vehicle maintenances, manual
-bank transactions) - never a stored/cached running total, the same
-anti-pattern avoidance applied throughout this project (Phase 4's stock
-quantities, Phase 5's invoice/customer balances).
+payments, expenses, fuel logs, completed vehicle maintenances, validated
+payslips, manual bank transactions) - never a stored/cached running
+total, the same anti-pattern avoidance applied throughout this project
+(Phase 4's stock quantities, Phase 5's invoice/customer balances).
 """
 
 from fastapi import HTTPException
@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.models.finance import BankAccount, BankTransaction, CashSession, Expense, SupplierPayment
 from app.models.fleet_ops import FuelLog, VehicleMaintenance
+from app.models.hr import Payslip
 from app.models.invoice import Payment
 
 
@@ -93,7 +94,22 @@ def get_cash_session_balance(db: Session, session: CashSession) -> float:
             VehicleMaintenance.state == "terminee",
         )
     ).scalar_one()
-    return session.opening_balance + cash_in - supplier_out - expenses_out - fuel_out - maintenance_out
+    payroll_out = db.execute(
+        select(func.coalesce(func.sum(Payslip.base_salary + Payslip.bonuses - Payslip.deductions), 0.0)).where(
+            Payslip.cash_session_id == session.id,
+            Payslip.payment_method == "especes",
+            Payslip.state == "validated",
+        )
+    ).scalar_one()
+    return (
+        session.opening_balance
+        + cash_in
+        - supplier_out
+        - expenses_out
+        - fuel_out
+        - maintenance_out
+        - payroll_out
+    )
 
 
 def get_bank_account_balance(db: Session, account_id: int, opening_balance: float) -> float:
@@ -140,6 +156,13 @@ def get_bank_account_balance(db: Session, account_id: int, opening_balance: floa
             VehicleMaintenance.state == "terminee",
         )
     ).scalar_one()
+    payroll_out = db.execute(
+        select(func.coalesce(func.sum(Payslip.base_salary + Payslip.bonuses - Payslip.deductions), 0.0)).where(
+            Payslip.bank_account_id == account_id,
+            Payslip.payment_method == "banque",
+            Payslip.state == "validated",
+        )
+    ).scalar_one()
     return (
         opening_balance
         + bank_in
@@ -149,4 +172,5 @@ def get_bank_account_balance(db: Session, account_id: int, opening_balance: floa
         - manual_out
         - fuel_out
         - maintenance_out
+        - payroll_out
     )

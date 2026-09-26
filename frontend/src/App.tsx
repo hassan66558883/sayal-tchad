@@ -12,12 +12,14 @@ import DeliveriesPage from './pages/DeliveriesPage'
 import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
 import FleetOperationsPage from './pages/FleetOperationsPage'
 import FleetPage from './pages/FleetPage'
+import HRPage from './pages/HRPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
 import LoginPage from './pages/LoginPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
 import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
+import ReportsPage from './pages/ReportsPage'
 import SaleOrdersPage from './pages/SaleOrdersPage'
 import StockInventoriesPage from './pages/StockInventoriesPage'
 import StockMovesPage from './pages/StockMovesPage'
@@ -60,6 +62,8 @@ export default function App() {
               <Route path="supplier-invoices" element={<SupplierInvoicesPage />} />
               <Route path="cash-registers" element={<CashRegistersPage />} />
               <Route path="bank-accounts" element={<BankAccountsPage />} />
+              <Route path="hr" element={<HRPage />} />
+              <Route path="reports" element={<ReportsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>
