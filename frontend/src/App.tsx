@@ -5,6 +5,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './auth/AuthContext'
 import AuditLogsPage from './pages/AuditLogsPage'
 import BranchesPage from './pages/BranchesPage'
+import DeliveriesPage from './pages/DeliveriesPage'
+import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
+import FleetPage from './pages/FleetPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
 import LoginPage from './pages/LoginPage'
@@ -44,6 +47,9 @@ export default function App() {
               <Route path="stock-inventories" element={<StockInventoriesPage />} />
               <Route path="sale-orders" element={<SaleOrdersPage />} />
               <Route path="invoices" element={<InvoicesPage />} />
+              <Route path="fleet" element={<FleetPage />} />
+              <Route path="delivery-routes" element={<DeliveryRoutesPage />} />
+              <Route path="deliveries" element={<DeliveriesPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>

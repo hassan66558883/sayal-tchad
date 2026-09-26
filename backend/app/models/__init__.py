@@ -1,5 +1,7 @@
 from app.models.audit_log import AuditLog
 from app.models.company import Branch, Company
+from app.models.delivery import Delivery, DeliveryLine, DeliveryRoute
+from app.models.fleet import Driver, Vehicle
 from app.models.import_ import Container, Import
 from app.models.invoice import Invoice, InvoiceLine, Payment
 from app.models.partner import Partner
@@ -15,6 +17,10 @@ __all__ = [
     "Branch",
     "Company",
     "Container",
+    "Delivery",
+    "DeliveryLine",
+    "DeliveryRoute",
+    "Driver",
     "Import",
     "Invoice",
     "InvoiceLine",
@@ -36,6 +42,7 @@ __all__ = [
     "Uom",
     "UomCategory",
     "User",
+    "Vehicle",
     "Warehouse",
     "user_branches",
     "user_roles",
