@@ -8,6 +8,7 @@ import BankAccountsPage from './pages/BankAccountsPage'
 import BranchesPage from './pages/BranchesPage'
 import CashRegistersPage from './pages/CashRegistersPage'
 import CommercialPage from './pages/CommercialPage'
+import DashboardPage from './pages/DashboardPage'
 import DeliveriesPage from './pages/DeliveriesPage'
 import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
 import FleetOperationsPage from './pages/FleetOperationsPage'
@@ -64,6 +65,7 @@ export default function App() {
               <Route path="bank-accounts" element={<BankAccountsPage />} />
               <Route path="hr" element={<HRPage />} />
               <Route path="reports" element={<ReportsPage />} />
+              <Route path="dashboard" element={<DashboardPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>

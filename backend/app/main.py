@@ -10,6 +10,7 @@ from app.routers import (
     branches,
     commercial,
     containers,
+    dashboard,
     deliveries,
     finance,
     fleet,
@@ -81,6 +82,7 @@ app.include_router(fleet_ops.router)
 app.include_router(commercial.router)
 app.include_router(hr.router)
 app.include_router(reports.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/api/health")
