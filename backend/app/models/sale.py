@@ -16,12 +16,14 @@ class SaleOrder(Base, AuditedMixin):
     reference: Mapped[str] = mapped_column(String(32), unique=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("partners.id"))
     branch_id: Mapped[int | None] = mapped_column(ForeignKey("branches.id"))
+    sales_rep_id: Mapped[int | None] = mapped_column(ForeignKey("sales_reps.id"))
     order_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="devis")
     amount_total: Mapped[float] = mapped_column(Float, default=0.0)
 
     customer = relationship("Partner")
     branch = relationship("Branch")
+    sales_rep = relationship("SalesRep")
     lines = relationship("SaleOrderLine", back_populates="order", cascade="all, delete-orphan")
 
 

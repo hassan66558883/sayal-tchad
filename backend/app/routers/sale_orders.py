@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.deps import get_current_user, require_roles
+from app.models.commercial import SalesRep
 from app.models.partner import Partner
 from app.models.product import Product
 from app.models.sale import SaleOrder, SaleOrderLine
@@ -46,10 +47,13 @@ def create_sale_order(
     customer = db.get(Partner, payload.customer_id)
     if customer is None or not customer.is_customer:
         raise HTTPException(status_code=400, detail="Client invalide.")
+    if payload.sales_rep_id is not None and db.get(SalesRep, payload.sales_rep_id) is None:
+        raise HTTPException(status_code=400, detail="Commercial introuvable.")
 
     order = SaleOrder(
         customer_id=payload.customer_id,
         branch_id=payload.branch_id,
+        sales_rep_id=payload.sales_rep_id,
         order_date=payload.order_date,
         state="devis",
     )

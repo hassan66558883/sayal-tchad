@@ -21,6 +21,7 @@ export default function AppLayout() {
           <NavLink to="/stock-inventories">Inventaires</NavLink>
           <NavLink to="/sale-orders">Devis &amp; commandes</NavLink>
           <NavLink to="/invoices">Factures</NavLink>
+          <NavLink to="/commercial">Commercial</NavLink>
           <NavLink to="/fleet">Vehicules &amp; chauffeurs</NavLink>
           <NavLink to="/fleet-operations">Carburant &amp; entretien</NavLink>
           <NavLink to="/delivery-routes">Tournees</NavLink>

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
+import { listSalesReps } from '../api/commercial'
 import { listPartners } from '../api/partners'
 import { listProducts } from '../api/products'
 import {
@@ -27,6 +28,7 @@ export default function SaleOrdersPage() {
   const { data: orders } = useQuery({ queryKey: ['sale-orders'], queryFn: listSaleOrders })
   const { data: partners } = useQuery({ queryKey: ['partners'], queryFn: listPartners })
   const { data: products } = useQuery({ queryKey: ['products'], queryFn: listProducts })
+  const { data: salesReps } = useQuery({ queryKey: ['sales-reps'], queryFn: listSalesReps })
   const customers = partners?.filter((p) => p.is_customer) ?? []
 
   const invalidate = () => {
@@ -44,6 +46,7 @@ export default function SaleOrdersPage() {
   const invoiceMutation = useMutation({ mutationFn: createInvoiceFromOrder, onSuccess: invalidate })
 
   const [customerId, setCustomerId] = useState('')
+  const [salesRepId, setSalesRepId] = useState('')
   const [orderDate, setOrderDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [lines, setLines] = useState<DraftLine[]>([])
   const [lineProductId, setLineProductId] = useState('')
@@ -71,9 +74,15 @@ export default function SaleOrdersPage() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    createMutation.mutate({ customer_id: Number(customerId), order_date: orderDate, lines })
+    createMutation.mutate({
+      customer_id: Number(customerId),
+      sales_rep_id: salesRepId ? Number(salesRepId) : undefined,
+      order_date: orderDate,
+      lines,
+    })
     setLines([])
     setCustomerId('')
+    setSalesRepId('')
   }
 
   function productName(id: number) {
@@ -89,6 +98,7 @@ export default function SaleOrdersPage() {
           <tr>
             <th>Reference</th>
             <th>Client</th>
+            <th>Commercial</th>
             <th>Date</th>
             <th>Statut</th>
             <th>Total</th>
@@ -100,6 +110,7 @@ export default function SaleOrdersPage() {
             <tr key={o.id}>
               <td>{o.reference}</td>
               <td>{partners?.find((p) => p.id === o.customer_id)?.name ?? o.customer_id}</td>
+              <td>{salesReps?.find((r) => r.id === o.sales_rep_id)?.name ?? '-'}</td>
               <td>{o.order_date}</td>
               <td>{o.state}</td>
               <td>{o.amount_total}</td>
@@ -130,6 +141,14 @@ export default function SaleOrdersPage() {
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
+              </option>
+            ))}
+          </select>
+          <select value={salesRepId} onChange={(e) => setSalesRepId(e.target.value)}>
+            <option value="">Commercial (optionnel)</option>
+            {salesReps?.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
               </option>
             ))}
           </select>

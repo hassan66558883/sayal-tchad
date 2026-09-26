@@ -14,6 +14,7 @@ export interface SaleOrder {
   reference: string
   customer_id: number
   branch_id: number | null
+  sales_rep_id: number | null
   order_date: string
   state: 'devis' | 'commande' | 'terminee' | 'annulee'
   amount_total: number
@@ -22,6 +23,7 @@ export interface SaleOrder {
 
 export interface CreateSaleOrderInput {
   customer_id: number
+  sales_rep_id?: number
   order_date: string
   lines: { product_id: number; qty: number; unit_price: number; discount_percent?: number }[]
 }

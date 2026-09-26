@@ -44,6 +44,7 @@ class SaleOrderLineRead(BaseModel):
 class SaleOrderCreate(BaseModel):
     customer_id: int
     branch_id: int | None = None
+    sales_rep_id: int | None = None
     order_date: date
     lines: list[SaleOrderLineCreate] = []
 
@@ -54,6 +55,7 @@ class SaleOrderRead(BaseModel):
     reference: str
     customer_id: int
     branch_id: int | None
+    sales_rep_id: int | None
     order_date: date
     state: str
     amount_total: float

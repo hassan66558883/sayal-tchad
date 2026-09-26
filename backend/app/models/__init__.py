@@ -1,4 +1,5 @@
 from app.models.audit_log import AuditLog
+from app.models.commercial import SalesRep, SalesTarget
 from app.models.company import Branch, Company
 from app.models.delivery import Delivery, DeliveryLine, DeliveryRoute
 from app.models.finance import (
@@ -51,6 +52,8 @@ __all__ = [
     "Role",
     "SaleOrder",
     "SaleOrderLine",
+    "SalesRep",
+    "SalesTarget",
     "SequenceCounter",
     "StockInventory",
     "StockInventoryLine",
