@@ -1,6 +1,16 @@
 from app.models.audit_log import AuditLog
 from app.models.company import Branch, Company
 from app.models.delivery import Delivery, DeliveryLine, DeliveryRoute
+from app.models.finance import (
+    BankAccount,
+    BankTransaction,
+    CashRegister,
+    CashSession,
+    Expense,
+    SupplierInvoice,
+    SupplierInvoiceLine,
+    SupplierPayment,
+)
 from app.models.fleet import Driver, Vehicle
 from app.models.import_ import Container, Import
 from app.models.invoice import Invoice, InvoiceLine, Payment
@@ -14,13 +24,18 @@ from app.models.user import Role, User, user_branches, user_roles
 
 __all__ = [
     "AuditLog",
+    "BankAccount",
+    "BankTransaction",
     "Branch",
+    "CashRegister",
+    "CashSession",
     "Company",
     "Container",
     "Delivery",
     "DeliveryLine",
     "DeliveryRoute",
     "Driver",
+    "Expense",
     "Import",
     "Invoice",
     "InvoiceLine",
@@ -39,6 +54,9 @@ __all__ = [
     "StockInventoryLine",
     "StockLot",
     "StockMove",
+    "SupplierInvoice",
+    "SupplierInvoiceLine",
+    "SupplierPayment",
     "Uom",
     "UomCategory",
     "User",

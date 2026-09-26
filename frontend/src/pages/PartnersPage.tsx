@@ -1,6 +1,7 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { CUSTOMER_TYPES, createPartner, listPartners } from '../api/partners'
+import { getSupplierBalance } from '../api/finance'
 import { getPartnerBalance } from '../api/sales'
 import { useAuth } from '../auth/AuthContext'
 
@@ -18,6 +19,15 @@ export default function PartnersPage() {
     })),
   })
   const balanceById = new Map(customerIds.map((id, i) => [id, balanceQueries[i]?.data?.balance]))
+
+  const supplierIds = partners?.filter((p) => p.is_supplier).map((p) => p.id) ?? []
+  const supplierBalanceQueries = useQueries({
+    queries: supplierIds.map((id) => ({
+      queryKey: ['supplier-balance', id],
+      queryFn: () => getSupplierBalance(id),
+    })),
+  })
+  const supplierBalanceById = new Map(supplierIds.map((id, i) => [id, supplierBalanceQueries[i]?.data?.balance]))
 
   const [name, setName] = useState('')
   const [isCustomer, setIsCustomer] = useState(true)
@@ -59,6 +69,7 @@ export default function PartnersPage() {
             <th>Type</th>
             <th>Telephone</th>
             <th>Solde client</th>
+            <th>Solde fournisseur (dette)</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +82,7 @@ export default function PartnersPage() {
               </td>
               <td>{p.phone ?? '-'}</td>
               <td>{p.is_customer ? (balanceById.get(p.id) ?? '...') : '-'}</td>
+              <td>{p.is_supplier ? (supplierBalanceById.get(p.id) ?? '...') : '-'}</td>
             </tr>
           ))}
         </tbody>

@@ -4,7 +4,9 @@ import AppLayout from './components/AppLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './auth/AuthContext'
 import AuditLogsPage from './pages/AuditLogsPage'
+import BankAccountsPage from './pages/BankAccountsPage'
 import BranchesPage from './pages/BranchesPage'
+import CashRegistersPage from './pages/CashRegistersPage'
 import DeliveriesPage from './pages/DeliveriesPage'
 import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
 import FleetPage from './pages/FleetPage'
@@ -17,6 +19,7 @@ import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
 import SaleOrdersPage from './pages/SaleOrdersPage'
 import StockInventoriesPage from './pages/StockInventoriesPage'
 import StockMovesPage from './pages/StockMovesPage'
+import SupplierInvoicesPage from './pages/SupplierInvoicesPage'
 import UsersPage from './pages/UsersPage'
 import WarehousesPage from './pages/WarehousesPage'
 
@@ -50,6 +53,9 @@ export default function App() {
               <Route path="fleet" element={<FleetPage />} />
               <Route path="delivery-routes" element={<DeliveryRoutesPage />} />
               <Route path="deliveries" element={<DeliveriesPage />} />
+              <Route path="supplier-invoices" element={<SupplierInvoicesPage />} />
+              <Route path="cash-registers" element={<CashRegistersPage />} />
+              <Route path="bank-accounts" element={<BankAccountsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="audit-logs" element={<AuditLogsPage />} />
             </Route>

@@ -6,6 +6,7 @@ from app.core.deps import get_current_user, require_roles
 from app.models.invoice import Invoice, Payment
 from app.models.user import User
 from app.schemas.invoice import PaymentCreate, PaymentRead
+from app.services.finance import validate_payment_method_target
 from app.services.invoice import get_other_confirmed_payments_total
 from app.services.sequence import next_reference
 
@@ -28,11 +29,15 @@ def create_payment(
     invoice = db.get(Invoice, payload.invoice_id)
     if invoice is None or invoice.state != "validated":
         raise HTTPException(status_code=400, detail="La facture doit etre validee pour recevoir un paiement.")
+    validate_payment_method_target(db, payload.payment_method, payload.cash_session_id, payload.bank_account_id)
     payment = Payment(
         invoice_id=payload.invoice_id,
         amount=payload.amount,
         payment_date=payload.payment_date,
         state="draft",
+        payment_method=payload.payment_method,
+        cash_session_id=payload.cash_session_id,
+        bank_account_id=payload.bank_account_id,
     )
     payment.reference = next_reference(db, code="payment", prefix="PAI")
     db.add(payment)

@@ -63,12 +63,22 @@ class PaymentCreate(BaseModel):
     invoice_id: int
     amount: float
     payment_date: date
+    payment_method: str = "especes"
+    cash_session_id: int | None = None
+    bank_account_id: int | None = None
 
     @field_validator("amount")
     @classmethod
     def amount_must_be_positive(cls, value: float) -> float:
         if value <= 0:
             raise ValueError("Le montant doit etre strictement positif.")
+        return value
+
+    @field_validator("payment_method")
+    @classmethod
+    def payment_method_must_be_valid(cls, value: str) -> str:
+        if value not in ("especes", "banque"):
+            raise ValueError("Mode de paiement invalide (especes ou banque).")
         return value
 
 
@@ -80,3 +90,6 @@ class PaymentRead(BaseModel):
     amount: float
     payment_date: date
     state: str
+    payment_method: str
+    cash_session_id: int | None
+    bank_account_id: int | None

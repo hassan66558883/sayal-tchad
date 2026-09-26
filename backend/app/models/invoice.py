@@ -62,5 +62,10 @@ class Payment(Base, AuditedMixin):
     amount: Mapped[float] = mapped_column(Float)
     payment_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="draft")
+    payment_method: Mapped[str] = mapped_column(String(16), default="especes")
+    cash_session_id: Mapped[int | None] = mapped_column(ForeignKey("cash_sessions.id"))
+    bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id"))
 
     invoice = relationship("Invoice", back_populates="payments")
+    cash_session = relationship("CashSession")
+    bank_account = relationship("BankAccount")

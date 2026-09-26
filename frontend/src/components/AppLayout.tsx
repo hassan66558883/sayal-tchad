@@ -24,6 +24,9 @@ export default function AppLayout() {
           <NavLink to="/fleet">Vehicules &amp; chauffeurs</NavLink>
           <NavLink to="/delivery-routes">Tournees</NavLink>
           <NavLink to="/deliveries">Mes livraisons</NavLink>
+          <NavLink to="/supplier-invoices">Dettes fournisseurs</NavLink>
+          <NavLink to="/cash-registers">Caisse</NavLink>
+          <NavLink to="/bank-accounts">Banque</NavLink>
           {hasRole('direction_generale') && (
             <>
               <NavLink to="/users">Utilisateurs</NavLink>

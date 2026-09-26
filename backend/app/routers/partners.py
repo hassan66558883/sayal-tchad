@@ -10,6 +10,7 @@ from app.schemas.partner import PartnerCreate, PartnerRead, PartnerUpdate
 from app.services.customer_balance import get_customer_balance
 from app.services.rbac import scope_by_branch
 from app.services.sequence import next_reference
+from app.services.supplier_invoice import get_supplier_balance
 
 PARTNER_MANAGERS = ("ventes", "achats", "direction_generale")
 
@@ -55,6 +56,15 @@ def read_partner_balance(
     if db.get(Partner, partner_id) is None:
         raise HTTPException(status_code=404, detail="Tiers introuvable.")
     return {"balance": get_customer_balance(db, partner_id)}
+
+
+@router.get("/{partner_id}/supplier-balance")
+def read_partner_supplier_balance(
+    partner_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)
+) -> dict[str, float]:
+    if db.get(Partner, partner_id) is None:
+        raise HTTPException(status_code=404, detail="Tiers introuvable.")
+    return {"balance": get_supplier_balance(db, partner_id)}
 
 
 @router.patch("/{partner_id}", response_model=PartnerRead)
