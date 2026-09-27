@@ -10,6 +10,7 @@ import {
   validateInvoice,
 } from '../api/sales'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 export default function InvoicesPage() {
   const { hasRole } = useAuth()
@@ -67,7 +68,9 @@ export default function InvoicesPage() {
               <td>{inv.reference}</td>
               <td>{inv.move_type === 'invoice' ? 'Facture' : 'Avoir'}</td>
               <td>{partners?.find((p) => p.id === inv.customer_id)?.name ?? inv.customer_id}</td>
-              <td>{inv.payment_state}</td>
+              <td>
+                <StatusBadge status={inv.payment_state} />
+              </td>
               <td>{inv.amount_total}</td>
               <td>{inv.amount_paid}</td>
               <td>{inv.amount_due}</td>
@@ -117,7 +120,9 @@ export default function InvoicesPage() {
                 <td>{p.reference}</td>
                 <td>{invoices?.find((i) => i.id === p.invoice_id)?.reference ?? p.invoice_id}</td>
                 <td>{p.amount}</td>
-                <td>{p.state}</td>
+                <td>
+                  <StatusBadge status={p.state} />
+                </td>
                 <td>
                   {canManagePayments && (
                     <button onClick={() => confirmPaymentMutation.mutate(p.id)}>Confirmer</button>

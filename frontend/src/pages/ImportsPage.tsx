@@ -11,6 +11,7 @@ import {
 } from '../api/purchases'
 import { createReception, listWarehouses } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 const NEXT_LABEL: Record<string, string> = {
   nouveau: 'Marquer expedie',
@@ -105,7 +106,9 @@ export default function ImportsPage() {
               <tr key={imp.id}>
                 <td>{imp.reference}</td>
                 <td>{order?.reference ?? imp.purchase_order_id}</td>
-                <td>{imp.state}</td>
+                <td>
+                  <StatusBadge status={imp.state} />
+                </td>
                 <td>
                   {imp.state === 'receptionne' ? (
                     `${imp.transport_cost} / ${imp.customs_cost} / ${imp.transit_cost} / ${imp.other_costs}`

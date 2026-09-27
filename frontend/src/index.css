@@ -163,6 +163,11 @@ a {
   color: var(--text-muted);
 }
 
+.badge-gold {
+  background: var(--gold-soft);
+  color: #a97a00;
+}
+
 .panel {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -766,5 +771,19 @@ a {
 
   .kpi-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .data-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .inline-form {
+    max-width: 100%;
   }
 }
