@@ -15,9 +15,12 @@ import {
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getDashboardSummary, getSalesByProduct, getSalesEvolution } from '../api/dashboard'
+import { listPartners } from '../api/partners'
+import { listInvoices, listSaleOrders } from '../api/sales'
 import { useAuth } from '../auth/AuthContext'
 import SalesByProductChart from '../components/SalesByProductChart'
 import SalesEvolutionChart from '../components/SalesEvolutionChart'
+import StatusBadge from '../components/StatusBadge'
 
 type ChartRange = '7d' | '30d' | '3m' | '12m'
 
@@ -105,6 +108,18 @@ export default function DashboardPage() {
     queryKey: ['sales-by-product', chartPeriod.start, chartPeriod.end],
     queryFn: () => getSalesByProduct(chartPeriod.start, chartPeriod.end),
   })
+
+  const { data: invoices } = useQuery({ queryKey: ['invoices'], queryFn: listInvoices })
+  const { data: orders } = useQuery({ queryKey: ['sale-orders'], queryFn: listSaleOrders })
+  const { data: partners } = useQuery({ queryKey: ['partners'], queryFn: listPartners })
+
+  const recentInvoices = invoices
+    ? [...invoices].sort((a, b) => b.invoice_date.localeCompare(a.invoice_date)).slice(0, 5)
+    : []
+  const recentOrders = orders
+    ? [...orders].sort((a, b) => b.order_date.localeCompare(a.order_date)).slice(0, 5)
+    : []
+  const partnerName = (id: number) => partners?.find((p) => p.id === id)?.name ?? id
 
   return (
     <div>
@@ -222,6 +237,74 @@ export default function DashboardPage() {
           <div className="panel">
             <h2>Ventes par produit</h2>
             {byProduct ? <SalesByProductChart data={byProduct} /> : <p>Chargement...</p>}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16 }}>
+            <div className="panel">
+              <h2>Ventes recentes</h2>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Facture</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Paiement</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentInvoices.map((inv) => (
+                    <tr key={inv.id}>
+                      <td>{inv.reference}</td>
+                      <td>{partnerName(inv.customer_id)}</td>
+                      <td>{fcfa(inv.amount_total)}</td>
+                      <td>
+                        <StatusBadge status={inv.payment_state} />
+                      </td>
+                    </tr>
+                  ))}
+                  {recentInvoices.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ color: 'var(--text-muted)' }}>
+                        Aucune facture.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="panel">
+              <h2>Commandes recentes</h2>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Commande</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.map((o) => (
+                    <tr key={o.id}>
+                      <td>{o.reference}</td>
+                      <td>{partnerName(o.customer_id)}</td>
+                      <td>{fcfa(o.amount_total)}</td>
+                      <td>
+                        <StatusBadge status={o.state} />
+                      </td>
+                    </tr>
+                  ))}
+                  {recentOrders.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ color: 'var(--text-muted)' }}>
+                        Aucune commande.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
