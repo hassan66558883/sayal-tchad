@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
+import { AlertTriangle, Banknote, Receipt, ShoppingCart, Truck, UsersRound, Wallet, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { getDashboardSummary } from '../api/dashboard'
+import { useAuth } from '../auth/AuthContext'
 
 function firstOfMonth(): string {
   const now = new Date()
@@ -12,7 +14,41 @@ function lastOfMonth(): string {
   return new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10)
 }
 
+const currencyFormatter = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
+
+function fcfa(value: number): string {
+  return `${currencyFormatter.format(value)} FCFA`
+}
+
+function daysUntil(dateStr: string): number {
+  const diff = new Date(dateStr).getTime() - Date.now()
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}
+
+function KpiCard({
+  icon,
+  tone,
+  value,
+  label,
+}: {
+  icon: React.ReactNode
+  tone?: 'gold' | 'success' | 'warning'
+  value: string
+  label: string
+}) {
+  return (
+    <div className="kpi-card">
+      <div className="kpi-top">
+        <span className={`kpi-icon ${tone ?? ''}`}>{icon}</span>
+      </div>
+      <div className="kpi-value">{value}</div>
+      <div className="kpi-label">{label}</div>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
+  const { user } = useAuth()
   const [periodStart, setPeriodStart] = useState(firstOfMonth())
   const [periodEnd, setPeriodEnd] = useState(lastOfMonth())
 
@@ -23,8 +59,10 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1>Tableau de bord Direction</h1>
-      <div className="inline-form" style={{ marginBottom: 16 }}>
+      <h1>Bonjour, {user?.name ?? ''}</h1>
+      <p className="page-subtitle">Voici un apercu de l'activite de SAYAL sur la periode selectionnee.</p>
+
+      <div className="inline-form" style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16 }}>
         <label>
           Du
           <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} />
@@ -38,143 +76,144 @@ export default function DashboardPage() {
       {!data ? (
         <p>Chargement...</p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
-          <div className="data-table">
-            <h2>Ventes</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Commandes confirmees</td>
-                  <td>{data.sales.total_confirmed_sales}</td>
-                </tr>
-                <tr>
-                  <td>Facture (net avoirs)</td>
-                  <td>{data.sales.total_invoiced}</td>
-                </tr>
-                <tr>
-                  <td>Encaisse</td>
-                  <td>{data.sales.total_collected}</td>
-                </tr>
-              </tbody>
-            </table>
+        <>
+          <div className="kpi-grid">
+            <KpiCard
+              icon={<Receipt size={18} />}
+              value={fcfa(data.sales.total_invoiced)}
+              label="Chiffre d'affaires facture"
+            />
+            <KpiCard
+              icon={<ShoppingCart size={18} />}
+              tone="gold"
+              value={fcfa(data.sales.total_confirmed_sales)}
+              label="Commandes confirmees"
+            />
+            <KpiCard icon={<Wallet size={18} />} tone="success" value={fcfa(data.sales.total_collected)} label="Encaisse" />
+            <KpiCard
+              icon={<AlertTriangle size={18} />}
+              tone="warning"
+              value={fcfa(data.finance.total_receivables)}
+              label="Creances clients"
+            />
+            <KpiCard
+              icon={<Receipt size={18} />}
+              tone="warning"
+              value={fcfa(data.finance.total_payables)}
+              label="Dettes fournisseurs"
+            />
+            <KpiCard
+              icon={<Banknote size={18} />}
+              tone="success"
+              value={fcfa(
+                data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0) +
+                  data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0),
+              )}
+              label="Solde caisse + banque"
+            />
+            <KpiCard icon={<UsersRound size={18} />} value={String(data.hr.active_employee_count)} label="Employes actifs" />
+            <KpiCard
+              icon={<Truck size={18} />}
+              tone="gold"
+              value={String(data.distribution.open_delivery_routes)}
+              label="Tournees en cours"
+            />
           </div>
 
-          <div className="data-table">
-            <h2>Finance</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Creances clients</td>
-                  <td>{data.finance.total_receivables}</td>
-                </tr>
-                <tr>
-                  <td>Dettes fournisseurs</td>
-                  <td>{data.finance.total_payables}</td>
-                </tr>
-                <tr>
-                  <td>Sessions de caisse ouvertes</td>
-                  <td>{data.finance.cash_sessions.length}</td>
-                </tr>
-                <tr>
-                  <td>Solde caisse total</td>
-                  <td>{data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0)}</td>
-                </tr>
-                <tr>
-                  <td>Solde bancaire total</td>
-                  <td>{data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="data-table">
-            <h2>Ressources humaines</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Employes actifs</td>
-                  <td>{data.hr.active_employee_count}</td>
-                </tr>
-                <tr>
-                  <td>En conge aujourd'hui</td>
-                  <td>{data.hr.on_leave_today_count}</td>
-                </tr>
-                <tr>
-                  <td>Demandes de conge en attente</td>
-                  <td>{data.hr.pending_leave_requests}</td>
-                </tr>
-                <tr>
-                  <td>Masse salariale (periode)</td>
-                  <td>{data.hr.payroll_cost}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="data-table">
-            <h2>Distribution</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Tournees en cours</td>
-                  <td>{data.distribution.open_delivery_routes}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="data-table">
-            <h2>Alertes stock bas</h2>
-            {data.stock.low_stock_products.length === 0 ? (
-              <p>Aucune alerte.</p>
-            ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+            <div className="panel">
+              <h2>Ressources humaines</h2>
               <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Produit</th>
-                    <th>Disponible</th>
-                    <th>Seuil</th>
-                  </tr>
-                </thead>
                 <tbody>
-                  {data.stock.low_stock_products.map((p) => (
-                    <tr key={p.product_id}>
-                      <td>{p.name}</td>
-                      <td>{p.qty_on_hand}</td>
-                      <td>{p.min_stock_qty}</td>
-                    </tr>
-                  ))}
+                  <tr>
+                    <td>En conge aujourd'hui</td>
+                    <td>{data.hr.on_leave_today_count}</td>
+                  </tr>
+                  <tr>
+                    <td>Demandes de conge en attente</td>
+                    <td>{data.hr.pending_leave_requests}</td>
+                  </tr>
+                  <tr>
+                    <td>Masse salariale (periode)</td>
+                    <td>{fcfa(data.hr.payroll_cost)}</td>
+                  </tr>
                 </tbody>
               </table>
-            )}
-          </div>
+            </div>
 
-          <div className="data-table">
-            <h2>Documents vehicule expirant sous 30 jours</h2>
-            {data.fleet.expiring_documents.length === 0 ? (
-              <p>Aucun document expirant.</p>
-            ) : (
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Vehicule</th>
-                    <th>Type</th>
-                    <th>Expiration</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.fleet.expiring_documents.map((d, i) => (
-                    <tr key={i}>
-                      <td>{d.vehicle_id}</td>
-                      <td>{d.document_type}</td>
-                      <td>{d.end_date}</td>
+            <div className="panel">
+              <h2>Alertes stock bas</h2>
+              {data.stock.low_stock_products.length === 0 ? (
+                <p style={{ color: 'var(--text-muted)' }}>Aucune alerte.</p>
+              ) : (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Produit</th>
+                      <th>Disponible</th>
+                      <th>Seuil</th>
+                      <th>Statut</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                  </thead>
+                  <tbody>
+                    {data.stock.low_stock_products.map((p) => (
+                      <tr key={p.product_id}>
+                        <td>{p.name}</td>
+                        <td>{p.qty_on_hand}</td>
+                        <td>{p.min_stock_qty}</td>
+                        <td>
+                          {p.qty_on_hand <= 0 ? (
+                            <span className="badge badge-danger">
+                              <XCircle size={12} /> Rupture
+                            </span>
+                          ) : (
+                            <span className="badge badge-warning">
+                              <AlertTriangle size={12} /> Stock faible
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            <div className="panel">
+              <h2>Documents vehicule expirant sous 30 jours</h2>
+              {data.fleet.expiring_documents.length === 0 ? (
+                <p style={{ color: 'var(--text-muted)' }}>Aucun document expirant.</p>
+              ) : (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Vehicule</th>
+                      <th>Type</th>
+                      <th>Expiration</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.fleet.expiring_documents.map((d, i) => (
+                      <tr key={i}>
+                        <td>{d.vehicle_id}</td>
+                        <td>{d.document_type}</td>
+                        <td>{d.end_date}</td>
+                        <td>
+                          {daysUntil(d.end_date) <= 7 ? (
+                            <span className="badge badge-danger">Urgent</span>
+                          ) : (
+                            <span className="badge badge-warning">A surveiller</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )
