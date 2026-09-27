@@ -137,6 +137,7 @@ a {
 .login-card h1 {
   margin-bottom: 0;
   font-size: 21px;
+  text-align: center;
 }
 
 .login-card .subtitle {
@@ -146,6 +147,7 @@ a {
   font-size: 12px;
   text-transform: uppercase;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .login-card label {
