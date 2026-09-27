@@ -17,6 +17,7 @@ import HRPage from './pages/HRPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
 import LoginPage from './pages/LoginPage'
+import PartnerDetailPage from './pages/PartnerDetailPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
 import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
@@ -49,6 +50,7 @@ export default function App() {
               <Route index element={<BranchesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="partners" element={<PartnersPage />} />
+              <Route path="partners/:id" element={<PartnerDetailPage />} />
               <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
               <Route path="imports" element={<ImportsPage />} />
               <Route path="warehouses" element={<WarehousesPage />} />

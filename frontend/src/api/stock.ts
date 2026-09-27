@@ -81,6 +81,25 @@ export const getProductStock = async (productId: number, warehouseId?: number): 
     })
   ).data
 
+export interface WarehouseSummary {
+  warehouse_id: number
+  current_qty: number
+  incoming_qty: number
+  outgoing_qty: number
+  transfers_qty: number
+}
+
+export const getWarehouseSummary = async (
+  warehouseId: number,
+  periodStart: string,
+  periodEnd: string,
+): Promise<WarehouseSummary> =>
+  (
+    await apiClient.get<WarehouseSummary>(`/warehouses/${warehouseId}/summary`, {
+      params: { period_start: periodStart, period_end: periodEnd },
+    })
+  ).data
+
 export const listStockInventories = async (): Promise<StockInventory[]> =>
   (await apiClient.get<StockInventory[]>('/stock-inventories')).data
 

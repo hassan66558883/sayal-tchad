@@ -1,11 +1,15 @@
+import { useQuery } from '@tanstack/react-query'
 import {
   AlertCircle,
+  AlertTriangle,
   ArrowLeftRight,
   BarChart3,
+  Bell,
   Building2,
   ClipboardList,
   FileText,
   Fuel,
+  Info,
   LandmarkIcon,
   LayoutDashboard,
   Menu,
@@ -27,8 +31,66 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { listNotifications } from '../api/notifications'
 import { globalSearch, type SearchResults } from '../api/search'
 import { useAuth } from '../auth/AuthContext'
+
+const SEVERITY_ICON = {
+  info: <Info size={15} />,
+  warning: <AlertTriangle size={15} />,
+  danger: <AlertCircle size={15} />,
+}
+
+function NotificationBell() {
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+  const boxRef = useRef<HTMLDivElement>(null)
+  const { data: notifications } = useQuery({
+    queryKey: ['notifications'],
+    queryFn: listNotifications,
+    refetchInterval: 60_000,
+  })
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
+
+  const count = notifications?.length ?? 0
+
+  return (
+    <div className="notif-box" ref={boxRef}>
+      <button className="notif-btn" onClick={() => setOpen((v) => !v)} title="Notifications">
+        <Bell size={18} />
+        {count > 0 && <span className="notif-count">{count > 9 ? '9+' : count}</span>}
+      </button>
+      {open && (
+        <div className="search-dropdown notif-dropdown">
+          {count === 0 && <div className="search-empty">Aucune alerte.</div>}
+          {notifications?.map((n) => (
+            <button
+              key={n.id}
+              className="notif-hit"
+              onClick={() => {
+                navigate(n.path)
+                setOpen(false)
+              }}
+            >
+              <span className={`notif-icon ${n.severity}`}>{SEVERITY_ICON[n.severity]}</span>
+              <span className="notif-text">
+                <span className="notif-title">{n.title}</span>
+                <span className="notif-message">{n.message}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 const SEARCH_CATEGORIES: { key: keyof SearchResults; label: string }[] = [
   { key: 'partners', label: 'Clients & fournisseurs' },
@@ -204,6 +266,7 @@ export default function AppLayout() {
           </button>
           <GlobalSearch />
           <div className="topbar-spacer" />
+          <NotificationBell />
           <span className="user-avatar">{(user?.name ?? '?').slice(0, 1).toUpperCase()}</span>
           <span className="user-name">{user?.name}</span>
           <button className="logout-btn" onClick={logout}>

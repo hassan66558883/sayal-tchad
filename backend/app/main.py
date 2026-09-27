@@ -18,6 +18,7 @@ from app.routers import (
     hr,
     imports,
     invoices,
+    notifications,
     partners,
     payments,
     product_catalog,
@@ -85,6 +86,7 @@ app.include_router(hr.router)
 app.include_router(reports.router)
 app.include_router(dashboard.router)
 app.include_router(search.router)
+app.include_router(notifications.router)
 
 
 @app.get("/api/health")

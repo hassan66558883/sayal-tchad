@@ -1,8 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { listProducts } from '../api/products'
-import { createWarehouse, getProductStock, listWarehouses } from '../api/stock'
+import { createWarehouse, getProductStock, getWarehouseSummary, listWarehouses } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
+
+function thirtyDaysAgo(): string {
+  const d = new Date()
+  d.setDate(d.getDate() - 29)
+  return d.toISOString().slice(0, 10)
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10)
+}
 
 export default function WarehousesPage() {
   const { hasRole } = useAuth()
@@ -11,6 +21,16 @@ export default function WarehousesPage() {
 
   const { data: warehouses } = useQuery({ queryKey: ['warehouses'], queryFn: listWarehouses })
   const { data: products } = useQuery({ queryKey: ['products'], queryFn: listProducts })
+
+  const periodStart = thirtyDaysAgo()
+  const periodEnd = today()
+  const summaryQueries = useQueries({
+    queries: (warehouses ?? []).map((w) => ({
+      queryKey: ['warehouse-summary', w.id, periodStart, periodEnd],
+      queryFn: () => getWarehouseSummary(w.id, periodStart, periodEnd),
+    })),
+  })
+  const summaryByWarehouse = new Map((warehouses ?? []).map((w, i) => [w.id, summaryQueries[i]?.data]))
 
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
@@ -33,20 +53,32 @@ export default function WarehousesPage() {
   return (
     <div>
       <h1>Entrepots</h1>
+      <p className="page-subtitle">Stock actuel et mouvements des 30 derniers jours, par entrepot.</p>
       <table className="data-table">
         <thead>
           <tr>
             <th>Code</th>
             <th>Nom</th>
+            <th>Stock actuel</th>
+            <th>Entrees (30j)</th>
+            <th>Sorties (30j)</th>
+            <th>Transferts recus (30j)</th>
           </tr>
         </thead>
         <tbody>
-          {warehouses?.map((w) => (
-            <tr key={w.id}>
-              <td>{w.code}</td>
-              <td>{w.name}</td>
-            </tr>
-          ))}
+          {warehouses?.map((w) => {
+            const s = summaryByWarehouse.get(w.id)
+            return (
+              <tr key={w.id}>
+                <td>{w.code}</td>
+                <td>{w.name}</td>
+                <td>{s ? s.current_qty : '...'}</td>
+                <td>{s ? s.incoming_qty : '...'}</td>
+                <td>{s ? s.outgoing_qty : '...'}</td>
+                <td>{s ? s.transfers_qty : '...'}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
 
