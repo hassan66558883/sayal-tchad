@@ -1,6 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, Banknote, Receipt, ShoppingCart, Truck, UsersRound, Wallet, XCircle } from 'lucide-react'
+import {
+  AlertTriangle,
+  Banknote,
+  FilePlus,
+  Package,
+  Receipt,
+  ShoppingCart,
+  Truck,
+  UserPlus,
+  UsersRound,
+  Wallet,
+  XCircle,
+} from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getDashboardSummary } from '../api/dashboard'
 import { useAuth } from '../auth/AuthContext'
 
@@ -61,6 +74,27 @@ export default function DashboardPage() {
     <div>
       <h1>Bonjour, {user?.name ?? ''}</h1>
       <p className="page-subtitle">Voici un apercu de l'activite de SAYAL sur la periode selectionnee.</p>
+
+      <div className="quick-actions">
+        <Link to="/sale-orders">
+          <FilePlus size={15} /> Nouveau devis
+        </Link>
+        <Link to="/purchase-orders">
+          <ShoppingCart size={15} /> Nouvelle commande d'achat
+        </Link>
+        <Link to="/partners">
+          <UserPlus size={15} /> Nouveau client
+        </Link>
+        <Link to="/delivery-routes">
+          <Truck size={15} /> Nouvelle tournee
+        </Link>
+        <Link to="/invoices">
+          <Wallet size={15} /> Encaissement
+        </Link>
+        <Link to="/stock-moves">
+          <Package size={15} /> Entree stock
+        </Link>
+      </div>
 
       <div className="inline-form" style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16 }}>
         <label>
