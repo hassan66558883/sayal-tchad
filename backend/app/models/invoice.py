@@ -19,7 +19,7 @@ class Invoice(Base, AuditedMixin):
     move_type: Mapped[str] = mapped_column(String(16), default="invoice")
     sale_order_id: Mapped[int | None] = mapped_column(ForeignKey("sale_orders.id"))
     origin_invoice_id: Mapped[int | None] = mapped_column(ForeignKey("invoices.id"))
-    customer_id: Mapped[int] = mapped_column(ForeignKey("partners.id"))
+    customer_id: Mapped[int] = mapped_column(ForeignKey("partners.id"), index=True)
     invoice_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="draft")
     amount_total: Mapped[float] = mapped_column(Float, default=0.0)
@@ -39,7 +39,7 @@ class InvoiceLine(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    invoice_id: Mapped[int] = mapped_column(ForeignKey("invoices.id"))
+    invoice_id: Mapped[int] = mapped_column(ForeignKey("invoices.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     qty: Mapped[float] = mapped_column(Float)
     unit_price: Mapped[float] = mapped_column(Float)
@@ -58,7 +58,7 @@ class Payment(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
-    invoice_id: Mapped[int] = mapped_column(ForeignKey("invoices.id"))
+    invoice_id: Mapped[int] = mapped_column(ForeignKey("invoices.id"), index=True)
     amount: Mapped[float] = mapped_column(Float)
     payment_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="draft")

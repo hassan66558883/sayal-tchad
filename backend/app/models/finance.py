@@ -27,9 +27,9 @@ class SupplierInvoice(Base, AuditedMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
     move_type: Mapped[str] = mapped_column(String(16), default="bill")
-    purchase_order_id: Mapped[int | None] = mapped_column(ForeignKey("purchase_orders.id"))
+    purchase_order_id: Mapped[int | None] = mapped_column(ForeignKey("purchase_orders.id"), index=True)
     origin_invoice_id: Mapped[int | None] = mapped_column(ForeignKey("supplier_invoices.id"))
-    supplier_id: Mapped[int] = mapped_column(ForeignKey("partners.id"))
+    supplier_id: Mapped[int] = mapped_column(ForeignKey("partners.id"), index=True)
     invoice_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="draft")
     amount_total: Mapped[float] = mapped_column(Float, default=0.0)
@@ -49,7 +49,7 @@ class SupplierInvoiceLine(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    invoice_id: Mapped[int] = mapped_column(ForeignKey("supplier_invoices.id"))
+    invoice_id: Mapped[int] = mapped_column(ForeignKey("supplier_invoices.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     qty: Mapped[float] = mapped_column(Float)
     unit_price: Mapped[float] = mapped_column(Float)
@@ -87,7 +87,7 @@ class CashSession(Base, AuditedMixin):
     __tablename__ = "cash_sessions"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    register_id: Mapped[int] = mapped_column(ForeignKey("cash_registers.id"))
+    register_id: Mapped[int] = mapped_column(ForeignKey("cash_registers.id"), index=True)
     state: Mapped[str] = mapped_column(String(16), default="open")
     opening_balance: Mapped[float] = mapped_column(Float, default=0.0)
     closing_balance: Mapped[float | None] = mapped_column(Float)
@@ -154,7 +154,7 @@ class SupplierPayment(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
-    invoice_id: Mapped[int] = mapped_column(ForeignKey("supplier_invoices.id"))
+    invoice_id: Mapped[int] = mapped_column(ForeignKey("supplier_invoices.id"), index=True)
     amount: Mapped[float] = mapped_column(Float)
     payment_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="draft")

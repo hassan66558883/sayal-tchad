@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
@@ -17,8 +18,12 @@ export default function LoginPage() {
     try {
       await login(email, password)
       navigate('/')
-    } catch {
-      setError('Email ou mot de passe incorrect.')
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 423) {
+        setError(err.response.data?.detail ?? 'Compte verrouille suite a trop de tentatives.')
+      } else {
+        setError('Email ou mot de passe incorrect.')
+      }
     } finally {
       setSubmitting(false)
     }

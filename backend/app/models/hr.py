@@ -42,7 +42,7 @@ class LeaveRequest(Base, AuditedMixin):
     __table_args__ = (CheckConstraint("end_date >= start_date", name="leave_request_end_after_start"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"))
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), index=True)
     leave_type: Mapped[str] = mapped_column(String(16), default="conge_paye")
     start_date: Mapped[date] = mapped_column(Date)
     end_date: Mapped[date] = mapped_column(Date)
@@ -67,7 +67,7 @@ class Payslip(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"))
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), index=True)
     period_start: Mapped[date] = mapped_column(Date)
     period_end: Mapped[date] = mapped_column(Date)
     base_salary: Mapped[float] = mapped_column(Float)

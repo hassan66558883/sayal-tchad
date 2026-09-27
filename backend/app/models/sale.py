@@ -16,7 +16,7 @@ class SaleOrder(Base, AuditedMixin):
     reference: Mapped[str] = mapped_column(String(32), unique=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("partners.id"))
     branch_id: Mapped[int | None] = mapped_column(ForeignKey("branches.id"))
-    sales_rep_id: Mapped[int | None] = mapped_column(ForeignKey("sales_reps.id"))
+    sales_rep_id: Mapped[int | None] = mapped_column(ForeignKey("sales_reps.id"), index=True)
     order_date: Mapped[date] = mapped_column(Date)
     state: Mapped[str] = mapped_column(String(16), default="devis")
     amount_total: Mapped[float] = mapped_column(Float, default=0.0)
@@ -38,7 +38,7 @@ class SaleOrderLine(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    order_id: Mapped[int] = mapped_column(ForeignKey("sale_orders.id"))
+    order_id: Mapped[int] = mapped_column(ForeignKey("sale_orders.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     qty: Mapped[float] = mapped_column(Float)
     unit_price: Mapped[float] = mapped_column(Float)

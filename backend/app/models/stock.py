@@ -43,10 +43,10 @@ class StockMove(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     move_type: Mapped[str] = mapped_column(String(16))
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
     qty: Mapped[float] = mapped_column(Float)
-    source_warehouse_id: Mapped[int | None] = mapped_column(ForeignKey("warehouses.id"))
-    dest_warehouse_id: Mapped[int | None] = mapped_column(ForeignKey("warehouses.id"))
+    source_warehouse_id: Mapped[int | None] = mapped_column(ForeignKey("warehouses.id"), index=True)
+    dest_warehouse_id: Mapped[int | None] = mapped_column(ForeignKey("warehouses.id"), index=True)
     lot_id: Mapped[int | None] = mapped_column(ForeignKey("stock_lots.id"))
     state: Mapped[str] = mapped_column(String(16), default="draft")
     reason: Mapped[str | None] = mapped_column(String(255))
@@ -75,7 +75,7 @@ class StockInventoryLine(Base):
     __tablename__ = "stock_inventory_lines"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    inventory_id: Mapped[int] = mapped_column(ForeignKey("stock_inventories.id"))
+    inventory_id: Mapped[int] = mapped_column(ForeignKey("stock_inventories.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     counted_qty: Mapped[float] = mapped_column(Float)
     theoretical_qty: Mapped[float | None] = mapped_column(Float)

@@ -18,7 +18,7 @@ class FuelLog(Base, AuditedMixin):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"))
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"), index=True)
     driver_id: Mapped[int | None] = mapped_column(ForeignKey("drivers.id"))
     log_date: Mapped[date] = mapped_column(Date)
     odometer: Mapped[float | None] = mapped_column(Float)
@@ -43,7 +43,7 @@ class VehicleMaintenance(Base, AuditedMixin):
     __table_args__ = (CheckConstraint("cost >= 0", name="vehicle_maintenance_cost_non_negative"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"))
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"), index=True)
     maintenance_date: Mapped[date] = mapped_column(Date)
     description: Mapped[str] = mapped_column(String(255))
     cost: Mapped[float] = mapped_column(Float, default=0.0)
@@ -67,7 +67,7 @@ class VehicleDocument(Base, AuditedMixin):
     __table_args__ = (CheckConstraint("end_date >= start_date", name="vehicle_document_end_after_start"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"))
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"), index=True)
     document_type: Mapped[str] = mapped_column(String(32))
     reference: Mapped[str | None] = mapped_column(String(64))
     start_date: Mapped[date] = mapped_column(Date)

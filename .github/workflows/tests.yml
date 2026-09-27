@@ -44,6 +44,13 @@ jobs:
         working-directory: backend
         run: python -m pytest -v
 
+      - name: Dependency vulnerability scan (informational)
+        working-directory: backend
+        continue-on-error: true
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt
+
   frontend-build:
     runs-on: ubuntu-latest
     steps:
@@ -66,3 +73,8 @@ jobs:
       - name: Lint
         working-directory: frontend
         run: npm run lint
+
+      - name: Dependency vulnerability scan (informational)
+        working-directory: frontend
+        continue-on-error: true
+        run: npm audit --audit-level=high

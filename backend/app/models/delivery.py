@@ -22,7 +22,7 @@ class DeliveryRoute(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
-    driver_id: Mapped[int] = mapped_column(ForeignKey("drivers.id"))
+    driver_id: Mapped[int] = mapped_column(ForeignKey("drivers.id"), index=True)
     vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id"))
     warehouse_id: Mapped[int | None] = mapped_column(ForeignKey("warehouses.id"))
     route_date: Mapped[date] = mapped_column(Date)
@@ -46,7 +46,7 @@ class Delivery(Base, AuditedMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     reference: Mapped[str] = mapped_column(String(32), unique=True)
-    route_id: Mapped[int] = mapped_column(ForeignKey("delivery_routes.id"))
+    route_id: Mapped[int] = mapped_column(ForeignKey("delivery_routes.id"), index=True)
     sale_order_id: Mapped[int] = mapped_column(ForeignKey("sale_orders.id"), unique=True)
     state: Mapped[str] = mapped_column(String(16), default="planifiee")
     signature_data: Mapped[str | None] = mapped_column(Text)
@@ -70,7 +70,7 @@ class DeliveryLine(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    delivery_id: Mapped[int] = mapped_column(ForeignKey("deliveries.id"))
+    delivery_id: Mapped[int] = mapped_column(ForeignKey("deliveries.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     ordered_qty: Mapped[float] = mapped_column(Float)
     delivered_qty: Mapped[float] = mapped_column(Float, default=0.0)

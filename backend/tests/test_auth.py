@@ -47,3 +47,32 @@ def test_login_updates_last_login_at(client, db):
     headers = auth_headers(client, "lastlogin@example.com", "correct-pass")
     resp = client.get("/api/auth/me", headers=headers)
     assert resp.json()["email"] == "lastlogin@example.com"
+
+
+def test_account_locks_after_five_failed_attempts(client, db):
+    make_user(db, email="lockout1@example.com", password="correct-pass")
+    for _ in range(5):
+        resp = client.post("/api/auth/login", data={"username": "lockout1@example.com", "password": "wrong"})
+        assert resp.status_code == 401
+
+    # even the correct password is now refused - the account is locked
+    resp = client.post("/api/auth/login", data={"username": "lockout1@example.com", "password": "correct-pass"})
+    assert resp.status_code == 423
+
+
+def test_successful_login_resets_failed_attempt_counter(client, db):
+    make_user(db, email="lockout2@example.com", password="correct-pass")
+    for _ in range(4):
+        resp = client.post("/api/auth/login", data={"username": "lockout2@example.com", "password": "wrong"})
+        assert resp.status_code == 401
+
+    # one correct login before the 5th failure resets the counter
+    resp = client.post("/api/auth/login", data={"username": "lockout2@example.com", "password": "correct-pass"})
+    assert resp.status_code == 200
+
+    for _ in range(4):
+        resp = client.post("/api/auth/login", data={"username": "lockout2@example.com", "password": "wrong"})
+        assert resp.status_code == 401
+    # still not locked - only 4 failures since the reset
+    resp = client.post("/api/auth/login", data={"username": "lockout2@example.com", "password": "correct-pass"})
+    assert resp.status_code == 200

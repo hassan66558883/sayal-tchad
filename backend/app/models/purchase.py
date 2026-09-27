@@ -34,7 +34,7 @@ class PurchaseOrderLine(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    order_id: Mapped[int] = mapped_column(ForeignKey("purchase_orders.id"))
+    order_id: Mapped[int] = mapped_column(ForeignKey("purchase_orders.id"), index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     qty: Mapped[float] = mapped_column(Float)
     unit_price: Mapped[float] = mapped_column(Float)
