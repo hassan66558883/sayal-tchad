@@ -168,6 +168,44 @@ a {
   color: #a97a00;
 }
 
+/* Progress bar */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.progress-fill.success {
+  background: var(--success);
+}
+
+.progress-fill.warning {
+  background: var(--warning);
+}
+
+.progress-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-h);
+  white-space: nowrap;
+}
+
 .panel {
   background: var(--panel-bg);
   border: 1px solid var(--border);

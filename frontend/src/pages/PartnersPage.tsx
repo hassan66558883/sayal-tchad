@@ -77,8 +77,9 @@ export default function PartnersPage() {
             <tr key={p.id}>
               <td>{p.reference}</td>
               <td>{p.name}</td>
-              <td>
-                {[p.is_customer && 'Client', p.is_supplier && 'Fournisseur'].filter(Boolean).join(' / ')}
+              <td style={{ display: 'flex', gap: 6 }}>
+                {p.is_customer && <span className="badge badge-gold">Client</span>}
+                {p.is_supplier && <span className="badge badge-muted">Fournisseur</span>}
               </td>
               <td>{p.phone ?? '-'}</td>
               <td>{p.is_customer ? (balanceById.get(p.id) ?? '...') : '-'}</td>
