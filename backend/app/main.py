@@ -25,6 +25,7 @@ from app.routers import (
     purchase_orders,
     reports,
     sale_orders,
+    search,
     stock_inventories,
     stock_moves,
     supplier_invoices,
@@ -83,6 +84,7 @@ app.include_router(commercial.router)
 app.include_router(hr.router)
 app.include_router(reports.router)
 app.include_router(dashboard.router)
+app.include_router(search.router)
 
 
 @app.get("/api/health")

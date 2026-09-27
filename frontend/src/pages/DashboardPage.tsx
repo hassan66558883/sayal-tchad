@@ -14,8 +14,33 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getDashboardSummary } from '../api/dashboard'
+import { getDashboardSummary, getSalesByProduct, getSalesEvolution } from '../api/dashboard'
 import { useAuth } from '../auth/AuthContext'
+import SalesByProductChart from '../components/SalesByProductChart'
+import SalesEvolutionChart from '../components/SalesEvolutionChart'
+
+type ChartRange = '7d' | '30d' | '3m' | '12m'
+
+const CHART_RANGES: { key: ChartRange; label: string }[] = [
+  { key: '7d', label: '7 jours' },
+  { key: '30d', label: '30 jours' },
+  { key: '3m', label: '3 mois' },
+  { key: '12m', label: '12 mois' },
+]
+
+function rangeToPeriod(range: ChartRange): { start: string; end: string; granularity: 'day' | 'month' } {
+  const end = new Date()
+  const start = new Date()
+  let granularity: 'day' | 'month' = 'day'
+  if (range === '7d') start.setDate(end.getDate() - 6)
+  else if (range === '30d') start.setDate(end.getDate() - 29)
+  else if (range === '3m') start.setMonth(end.getMonth() - 3)
+  else {
+    start.setMonth(end.getMonth() - 11)
+    granularity = 'month'
+  }
+  return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10), granularity }
+}
 
 function firstOfMonth(): string {
   const now = new Date()
@@ -64,10 +89,21 @@ export default function DashboardPage() {
   const { user } = useAuth()
   const [periodStart, setPeriodStart] = useState(firstOfMonth())
   const [periodEnd, setPeriodEnd] = useState(lastOfMonth())
+  const [chartRange, setChartRange] = useState<ChartRange>('30d')
 
   const { data } = useQuery({
     queryKey: ['dashboard-summary', periodStart, periodEnd],
     queryFn: () => getDashboardSummary(periodStart, periodEnd),
+  })
+
+  const chartPeriod = rangeToPeriod(chartRange)
+  const { data: evolution } = useQuery({
+    queryKey: ['sales-evolution', chartPeriod.start, chartPeriod.end, chartPeriod.granularity],
+    queryFn: () => getSalesEvolution(chartPeriod.start, chartPeriod.end, chartPeriod.granularity),
+  })
+  const { data: byProduct } = useQuery({
+    queryKey: ['sales-by-product', chartPeriod.start, chartPeriod.end],
+    queryFn: () => getSalesByProduct(chartPeriod.start, chartPeriod.end),
   })
 
   return (
@@ -152,6 +188,40 @@ export default function DashboardPage() {
               value={String(data.distribution.open_delivery_routes)}
               label="Tournees en cours"
             />
+          </div>
+
+          <div className="panel">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <h2 style={{ marginBottom: 0 }}>Evolution des ventes</h2>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {CHART_RANGES.map((r) => (
+                  <button
+                    key={r.key}
+                    onClick={() => setChartRange(r.key)}
+                    style={{
+                      border: '1px solid var(--border)',
+                      background: chartRange === r.key ? 'var(--accent)' : 'var(--panel-bg)',
+                      color: chartRange === r.key ? '#fff' : 'var(--text)',
+                      borderRadius: 999,
+                      padding: '5px 12px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              {evolution ? <SalesEvolutionChart data={evolution} /> : <p>Chargement...</p>}
+            </div>
+          </div>
+
+          <div className="panel">
+            <h2>Ventes par produit</h2>
+            {byProduct ? <SalesByProductChart data={byProduct} /> : <p>Chargement...</p>}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>

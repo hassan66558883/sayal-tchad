@@ -1,4 +1,5 @@
 import {
+  AlertCircle,
   ArrowLeftRight,
   BarChart3,
   Building2,
@@ -12,6 +13,7 @@ import {
   PackageCheck,
   Receipt,
   ScrollText,
+  Search,
   Ship,
   ShoppingCart,
   Target,
@@ -23,9 +25,89 @@ import {
   Warehouse,
   X,
 } from 'lucide-react'
-import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { globalSearch, type SearchResults } from '../api/search'
 import { useAuth } from '../auth/AuthContext'
+
+const SEARCH_CATEGORIES: { key: keyof SearchResults; label: string }[] = [
+  { key: 'partners', label: 'Clients & fournisseurs' },
+  { key: 'products', label: 'Produits' },
+  { key: 'invoices', label: 'Factures' },
+  { key: 'sale_orders', label: 'Devis & commandes' },
+  { key: 'deliveries', label: 'Livraisons' },
+]
+
+function GlobalSearch() {
+  const navigate = useNavigate()
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<SearchResults | null>(null)
+  const [open, setOpen] = useState(false)
+  const boxRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (query.trim().length < 2) {
+      setResults(null)
+      return
+    }
+    const timer = setTimeout(() => {
+      globalSearch(query.trim()).then((r) => {
+        setResults(r)
+        setOpen(true)
+      })
+    }, 250)
+    return () => clearTimeout(timer)
+  }, [query])
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
+
+  const hasResults = results && SEARCH_CATEGORIES.some((c) => results[c.key].length > 0)
+
+  return (
+    <div className="search-box" ref={boxRef}>
+      <Search size={15} className="search-icon" />
+      <input
+        placeholder="Rechercher un client, produit, facture..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => results && setOpen(true)}
+      />
+      {open && results && (
+        <div className="search-dropdown">
+          {!hasResults && <div className="search-empty">Aucun resultat.</div>}
+          {SEARCH_CATEGORIES.map(
+            (cat) =>
+              results[cat.key].length > 0 && (
+                <div key={cat.key}>
+                  <div className="search-category">{cat.label}</div>
+                  {results[cat.key].map((hit) => (
+                    <button
+                      key={`${cat.key}-${hit.id}`}
+                      className="search-hit"
+                      onClick={() => {
+                        navigate(hit.path)
+                        setOpen(false)
+                        setQuery('')
+                      }}
+                    >
+                      <span>{hit.label}</span>
+                      <span className="search-hit-sub">{hit.sublabel}</span>
+                    </button>
+                  ))}
+                </div>
+              ),
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
 
 function NavItem({ to, end, icon, label }: { to: string; end?: boolean; icon: React.ReactNode; label: string }) {
   return (
@@ -98,6 +180,9 @@ export default function AppLayout() {
           <NavItem to="/supplier-invoices" icon={<Receipt size={17} />} label="Dettes fournisseurs" />
           <NavItem to="/cash-registers" icon={<Wallet size={17} />} label="Caisse" />
           <NavItem to="/bank-accounts" icon={<LandmarkIcon size={17} />} label="Banque" />
+          {hasRole('direction_generale') && (
+            <NavItem to="/receivables" icon={<AlertCircle size={17} />} label="Suivi des creances" />
+          )}
 
           <div className="nav-section">RH &amp; rapports</div>
           <NavItem to="/hr" icon={<UsersRound size={17} />} label="Ressources humaines" />
@@ -117,6 +202,7 @@ export default function AppLayout() {
           <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)} title="Menu">
             <Menu size={18} />
           </button>
+          <GlobalSearch />
           <div className="topbar-spacer" />
           <span className="user-avatar">{(user?.name ?? '?').slice(0, 1).toUpperCase()}</span>
           <span className="user-name">{user?.name}</span>

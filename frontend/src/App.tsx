@@ -20,6 +20,7 @@ import LoginPage from './pages/LoginPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
 import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
+import ReceivablesPage from './pages/ReceivablesPage'
 import ReportsPage from './pages/ReportsPage'
 import SaleOrdersPage from './pages/SaleOrdersPage'
 import StockInventoriesPage from './pages/StockInventoriesPage'
@@ -63,6 +64,7 @@ export default function App() {
               <Route path="supplier-invoices" element={<SupplierInvoicesPage />} />
               <Route path="cash-registers" element={<CashRegistersPage />} />
               <Route path="bank-accounts" element={<BankAccountsPage />} />
+              <Route path="receivables" element={<ReceivablesPage />} />
               <Route path="hr" element={<HRPage />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="dashboard" element={<DashboardPage />} />
