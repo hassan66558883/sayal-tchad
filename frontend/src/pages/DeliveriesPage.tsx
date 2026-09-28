@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { confirmDelivery, listDeliveries } from '../api/deliveries'
 import { listProducts } from '../api/products'
+import StatusBadge from '../components/StatusBadge'
 
 export default function DeliveriesPage() {
   const queryClient = useQueryClient()
@@ -50,8 +51,9 @@ export default function DeliveriesPage() {
       <h1>Mes livraisons</h1>
       {deliveries?.map((d) => (
         <div key={d.id} className="inline-form" style={{ marginBottom: 16 }}>
-          <h2>
-            {d.reference} - {d.state}
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {d.reference}
+            <StatusBadge status={d.state} />
           </h2>
           {d.lines.map((line) => (
             <div key={line.id}>

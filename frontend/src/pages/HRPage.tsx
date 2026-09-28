@@ -13,6 +13,7 @@ import {
   validatePayslip,
   type LeaveType,
 } from '../api/hr'
+import StatusBadge from '../components/StatusBadge'
 import { listUsers } from '../api/users'
 import { useAuth } from '../auth/AuthContext'
 
@@ -184,7 +185,9 @@ export default function HRPage() {
               <td>{r.leave_type}</td>
               <td>{r.start_date}</td>
               <td>{r.end_date}</td>
-              <td>{r.state}</td>
+              <td>
+                <StatusBadge status={r.state} />
+              </td>
               <td>
                 {canManage && r.state === 'en_attente' && (
                   <>
@@ -242,7 +245,9 @@ export default function HRPage() {
                     {p.period_start} - {p.period_end}
                   </td>
                   <td>{p.net_pay}</td>
-                  <td>{p.state}</td>
+                  <td>
+                    <StatusBadge status={p.state} />
+                  </td>
                   <td>
                     {p.state === 'draft' && (
                       <button onClick={() => validatePayslipMutation.mutate(p.id)}>Valider</button>

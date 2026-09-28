@@ -1,6 +1,49 @@
 import { useQuery } from '@tanstack/react-query'
+import {
+  AlertTriangle,
+  Banknote,
+  FilePlus,
+  Package,
+  Receipt,
+  ShoppingCart,
+  Truck,
+  UserPlus,
+  UsersRound,
+  Wallet,
+  XCircle,
+} from 'lucide-react'
 import { useState } from 'react'
-import { getDashboardSummary } from '../api/dashboard'
+import { Link } from 'react-router-dom'
+import { getDashboardSummary, getSalesByProduct, getSalesEvolution } from '../api/dashboard'
+import { listPartners } from '../api/partners'
+import { listInvoices, listSaleOrders } from '../api/sales'
+import { useAuth } from '../auth/AuthContext'
+import SalesByProductChart from '../components/SalesByProductChart'
+import SalesEvolutionChart from '../components/SalesEvolutionChart'
+import StatusBadge from '../components/StatusBadge'
+
+type ChartRange = '7d' | '30d' | '3m' | '12m'
+
+const CHART_RANGES: { key: ChartRange; label: string }[] = [
+  { key: '7d', label: '7 jours' },
+  { key: '30d', label: '30 jours' },
+  { key: '3m', label: '3 mois' },
+  { key: '12m', label: '12 mois' },
+]
+
+function rangeToPeriod(range: ChartRange): { start: string; end: string; granularity: 'day' | 'month' } {
+  const end = new Date()
+  const start = new Date()
+  let granularity: 'day' | 'month' = 'day'
+  if (range === '7d') start.setDate(end.getDate() - 6)
+  else if (range === '30d') start.setDate(end.getDate() - 29)
+  else if (range === '3m') start.setMonth(end.getMonth() - 3)
+  else {
+    start.setMonth(end.getMonth() - 11)
+    granularity = 'month'
+  }
+  return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10), granularity }
+}
 
 function firstOfMonth(): string {
   const now = new Date()
@@ -12,19 +55,99 @@ function lastOfMonth(): string {
   return new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10)
 }
 
+const currencyFormatter = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
+
+function fcfa(value: number): string {
+  return `${currencyFormatter.format(value)} FCFA`
+}
+
+function daysUntil(dateStr: string): number {
+  const diff = new Date(dateStr).getTime() - Date.now()
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}
+
+function KpiCard({
+  icon,
+  tone,
+  value,
+  label,
+}: {
+  icon: React.ReactNode
+  tone?: 'gold' | 'success' | 'warning'
+  value: string
+  label: string
+}) {
+  return (
+    <div className="kpi-card">
+      <div className="kpi-top">
+        <span className={`kpi-icon ${tone ?? ''}`}>{icon}</span>
+      </div>
+      <div className="kpi-value">{value}</div>
+      <div className="kpi-label">{label}</div>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
+  const { user } = useAuth()
   const [periodStart, setPeriodStart] = useState(firstOfMonth())
   const [periodEnd, setPeriodEnd] = useState(lastOfMonth())
+  const [chartRange, setChartRange] = useState<ChartRange>('30d')
 
   const { data } = useQuery({
     queryKey: ['dashboard-summary', periodStart, periodEnd],
     queryFn: () => getDashboardSummary(periodStart, periodEnd),
   })
 
+  const chartPeriod = rangeToPeriod(chartRange)
+  const { data: evolution } = useQuery({
+    queryKey: ['sales-evolution', chartPeriod.start, chartPeriod.end, chartPeriod.granularity],
+    queryFn: () => getSalesEvolution(chartPeriod.start, chartPeriod.end, chartPeriod.granularity),
+  })
+  const { data: byProduct } = useQuery({
+    queryKey: ['sales-by-product', chartPeriod.start, chartPeriod.end],
+    queryFn: () => getSalesByProduct(chartPeriod.start, chartPeriod.end),
+  })
+
+  const { data: invoices } = useQuery({ queryKey: ['invoices'], queryFn: listInvoices })
+  const { data: orders } = useQuery({ queryKey: ['sale-orders'], queryFn: listSaleOrders })
+  const { data: partners } = useQuery({ queryKey: ['partners'], queryFn: listPartners })
+
+  const recentInvoices = invoices
+    ? [...invoices].sort((a, b) => b.invoice_date.localeCompare(a.invoice_date)).slice(0, 5)
+    : []
+  const recentOrders = orders
+    ? [...orders].sort((a, b) => b.order_date.localeCompare(a.order_date)).slice(0, 5)
+    : []
+  const partnerName = (id: number) => partners?.find((p) => p.id === id)?.name ?? id
+
   return (
     <div>
-      <h1>Tableau de bord Direction</h1>
-      <div className="inline-form" style={{ marginBottom: 16 }}>
+      <h1>Bonjour, {user?.name ?? ''}</h1>
+      <p className="page-subtitle">Voici un apercu de l'activite de SAYAL sur la periode selectionnee.</p>
+
+      <div className="quick-actions">
+        <Link to="/sale-orders">
+          <FilePlus size={15} /> Nouveau devis
+        </Link>
+        <Link to="/purchase-orders">
+          <ShoppingCart size={15} /> Nouvelle commande d'achat
+        </Link>
+        <Link to="/partners">
+          <UserPlus size={15} /> Nouveau client
+        </Link>
+        <Link to="/delivery-routes">
+          <Truck size={15} /> Nouvelle tournee
+        </Link>
+        <Link to="/invoices">
+          <Wallet size={15} /> Encaissement
+        </Link>
+        <Link to="/stock-moves">
+          <Package size={15} /> Entree stock
+        </Link>
+      </div>
+
+      <div className="inline-form" style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16 }}>
         <label>
           Du
           <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} />
@@ -38,143 +161,246 @@ export default function DashboardPage() {
       {!data ? (
         <p>Chargement...</p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
-          <div className="data-table">
-            <h2>Ventes</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Commandes confirmees</td>
-                  <td>{data.sales.total_confirmed_sales}</td>
-                </tr>
-                <tr>
-                  <td>Facture (net avoirs)</td>
-                  <td>{data.sales.total_invoiced}</td>
-                </tr>
-                <tr>
-                  <td>Encaisse</td>
-                  <td>{data.sales.total_collected}</td>
-                </tr>
-              </tbody>
-            </table>
+        <>
+          <div className="kpi-grid">
+            <KpiCard
+              icon={<Receipt size={18} />}
+              value={fcfa(data.sales.total_invoiced)}
+              label="Chiffre d'affaires facture"
+            />
+            <KpiCard
+              icon={<ShoppingCart size={18} />}
+              tone="gold"
+              value={fcfa(data.sales.total_confirmed_sales)}
+              label="Commandes confirmees"
+            />
+            <KpiCard icon={<Wallet size={18} />} tone="success" value={fcfa(data.sales.total_collected)} label="Encaisse" />
+            <KpiCard
+              icon={<AlertTriangle size={18} />}
+              tone="warning"
+              value={fcfa(data.finance.total_receivables)}
+              label="Creances clients"
+            />
+            <KpiCard
+              icon={<Receipt size={18} />}
+              tone="warning"
+              value={fcfa(data.finance.total_payables)}
+              label="Dettes fournisseurs"
+            />
+            <KpiCard
+              icon={<Banknote size={18} />}
+              tone="success"
+              value={fcfa(
+                data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0) +
+                  data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0),
+              )}
+              label="Solde caisse + banque"
+            />
+            <KpiCard icon={<UsersRound size={18} />} value={String(data.hr.active_employee_count)} label="Employes actifs" />
+            <KpiCard
+              icon={<Truck size={18} />}
+              tone="gold"
+              value={String(data.distribution.open_delivery_routes)}
+              label="Tournees en cours"
+            />
           </div>
 
-          <div className="data-table">
-            <h2>Finance</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Creances clients</td>
-                  <td>{data.finance.total_receivables}</td>
-                </tr>
-                <tr>
-                  <td>Dettes fournisseurs</td>
-                  <td>{data.finance.total_payables}</td>
-                </tr>
-                <tr>
-                  <td>Sessions de caisse ouvertes</td>
-                  <td>{data.finance.cash_sessions.length}</td>
-                </tr>
-                <tr>
-                  <td>Solde caisse total</td>
-                  <td>{data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0)}</td>
-                </tr>
-                <tr>
-                  <td>Solde bancaire total</td>
-                  <td>{data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0)}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="panel">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <h2 style={{ marginBottom: 0 }}>Evolution des ventes</h2>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {CHART_RANGES.map((r) => (
+                  <button
+                    key={r.key}
+                    onClick={() => setChartRange(r.key)}
+                    style={{
+                      border: '1px solid var(--border)',
+                      background: chartRange === r.key ? 'var(--accent)' : 'var(--panel-bg)',
+                      color: chartRange === r.key ? '#fff' : 'var(--text)',
+                      borderRadius: 999,
+                      padding: '5px 12px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              {evolution ? <SalesEvolutionChart data={evolution} /> : <p>Chargement...</p>}
+            </div>
           </div>
 
-          <div className="data-table">
-            <h2>Ressources humaines</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Employes actifs</td>
-                  <td>{data.hr.active_employee_count}</td>
-                </tr>
-                <tr>
-                  <td>En conge aujourd'hui</td>
-                  <td>{data.hr.on_leave_today_count}</td>
-                </tr>
-                <tr>
-                  <td>Demandes de conge en attente</td>
-                  <td>{data.hr.pending_leave_requests}</td>
-                </tr>
-                <tr>
-                  <td>Masse salariale (periode)</td>
-                  <td>{data.hr.payroll_cost}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="panel">
+            <h2>Ventes par produit</h2>
+            {byProduct ? <SalesByProductChart data={byProduct} /> : <p>Chargement...</p>}
           </div>
 
-          <div className="data-table">
-            <h2>Distribution</h2>
-            <table className="data-table">
-              <tbody>
-                <tr>
-                  <td>Tournees en cours</td>
-                  <td>{data.distribution.open_delivery_routes}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="data-table">
-            <h2>Alertes stock bas</h2>
-            {data.stock.low_stock_products.length === 0 ? (
-              <p>Aucune alerte.</p>
-            ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 16 }}>
+            <div className="panel">
+              <h2>Ventes recentes</h2>
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Produit</th>
-                    <th>Disponible</th>
-                    <th>Seuil</th>
+                    <th>Facture</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Paiement</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.stock.low_stock_products.map((p) => (
-                    <tr key={p.product_id}>
-                      <td>{p.name}</td>
-                      <td>{p.qty_on_hand}</td>
-                      <td>{p.min_stock_qty}</td>
+                  {recentInvoices.map((inv) => (
+                    <tr key={inv.id}>
+                      <td>{inv.reference}</td>
+                      <td>{partnerName(inv.customer_id)}</td>
+                      <td>{fcfa(inv.amount_total)}</td>
+                      <td>
+                        <StatusBadge status={inv.payment_state} />
+                      </td>
                     </tr>
                   ))}
+                  {recentInvoices.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ color: 'var(--text-muted)' }}>
+                        Aucune facture.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
-            )}
-          </div>
+            </div>
 
-          <div className="data-table">
-            <h2>Documents vehicule expirant sous 30 jours</h2>
-            {data.fleet.expiring_documents.length === 0 ? (
-              <p>Aucun document expirant.</p>
-            ) : (
+            <div className="panel">
+              <h2>Commandes recentes</h2>
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Vehicule</th>
-                    <th>Type</th>
-                    <th>Expiration</th>
+                    <th>Commande</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.fleet.expiring_documents.map((d, i) => (
-                    <tr key={i}>
-                      <td>{d.vehicle_id}</td>
-                      <td>{d.document_type}</td>
-                      <td>{d.end_date}</td>
+                  {recentOrders.map((o) => (
+                    <tr key={o.id}>
+                      <td>{o.reference}</td>
+                      <td>{partnerName(o.customer_id)}</td>
+                      <td>{fcfa(o.amount_total)}</td>
+                      <td>
+                        <StatusBadge status={o.state} />
+                      </td>
                     </tr>
                   ))}
+                  {recentOrders.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ color: 'var(--text-muted)' }}>
+                        Aucune commande.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
-            )}
+            </div>
           </div>
-        </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+            <div className="panel">
+              <h2>Ressources humaines</h2>
+              <table className="data-table">
+                <tbody>
+                  <tr>
+                    <td>En conge aujourd'hui</td>
+                    <td>{data.hr.on_leave_today_count}</td>
+                  </tr>
+                  <tr>
+                    <td>Demandes de conge en attente</td>
+                    <td>{data.hr.pending_leave_requests}</td>
+                  </tr>
+                  <tr>
+                    <td>Masse salariale (periode)</td>
+                    <td>{fcfa(data.hr.payroll_cost)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="panel">
+              <h2>Alertes stock bas</h2>
+              {data.stock.low_stock_products.length === 0 ? (
+                <p style={{ color: 'var(--text-muted)' }}>Aucune alerte.</p>
+              ) : (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Produit</th>
+                      <th>Disponible</th>
+                      <th>Seuil</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.stock.low_stock_products.map((p) => (
+                      <tr key={p.product_id}>
+                        <td>{p.name}</td>
+                        <td>{p.qty_on_hand}</td>
+                        <td>{p.min_stock_qty}</td>
+                        <td>
+                          {p.qty_on_hand <= 0 ? (
+                            <span className="badge badge-danger">
+                              <XCircle size={12} /> Rupture
+                            </span>
+                          ) : (
+                            <span className="badge badge-warning">
+                              <AlertTriangle size={12} /> Stock faible
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            <div className="panel">
+              <h2>Documents vehicule expirant sous 30 jours</h2>
+              {data.fleet.expiring_documents.length === 0 ? (
+                <p style={{ color: 'var(--text-muted)' }}>Aucun document expirant.</p>
+              ) : (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Vehicule</th>
+                      <th>Type</th>
+                      <th>Expiration</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.fleet.expiring_documents.map((d, i) => (
+                      <tr key={i}>
+                        <td>{d.vehicle_id}</td>
+                        <td>{d.document_type}</td>
+                        <td>{d.end_date}</td>
+                        <td>
+                          {daysUntil(d.end_date) <= 7 ? (
+                            <span className="badge badge-danger">Urgent</span>
+                          ) : (
+                            <span className="badge badge-warning">A surveiller</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

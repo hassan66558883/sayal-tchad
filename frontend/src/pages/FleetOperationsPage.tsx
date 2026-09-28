@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { listCashSessions, listBankAccounts, type PaymentMethod } from '../api/finance'
+import StatusBadge from '../components/StatusBadge'
 import {
   cancelVehicleMaintenance,
   completeVehicleMaintenance,
@@ -205,7 +206,9 @@ export default function FleetOperationsPage() {
               <td>{m.maintenance_date}</td>
               <td>{m.description}</td>
               <td>{m.cost}</td>
-              <td>{m.state}</td>
+              <td>
+                <StatusBadge status={m.state} />
+              </td>
               <td>
                 {canManage && m.state === 'planifiee' && (
                   <>

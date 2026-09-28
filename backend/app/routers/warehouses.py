@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -7,6 +9,7 @@ from app.models.product import Product
 from app.models.stock import StockLot, Warehouse
 from app.models.user import User
 from app.schemas.stock import StockLotCreate, StockLotRead, WarehouseCreate, WarehouseRead
+from app.services.stock import get_warehouse_summary
 
 STOCK_MANAGERS = ("stock", "direction_generale")
 
@@ -16,6 +19,19 @@ router = APIRouter(prefix="/api", tags=["stock"])
 @router.get("/warehouses", response_model=list[WarehouseRead])
 def list_warehouses(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
     return db.query(Warehouse).filter(Warehouse.active.is_(True)).all()
+
+
+@router.get("/warehouses/{warehouse_id}/summary")
+def read_warehouse_summary(
+    warehouse_id: int,
+    period_start: date,
+    period_end: date,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+) -> dict:
+    if db.get(Warehouse, warehouse_id) is None:
+        raise HTTPException(status_code=404, detail="Entrepot introuvable.")
+    return get_warehouse_summary(db, warehouse_id, period_start, period_end)
 
 
 @router.post("/warehouses", response_model=WarehouseRead, status_code=status.HTTP_201_CREATED)

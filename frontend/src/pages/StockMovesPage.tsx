@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { listProducts } from '../api/products'
 import { createStockMove, listStockMoves, listWarehouses, validateStockMove } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 const MOVE_TYPES = [
   ['in', 'Entree'],
@@ -83,7 +84,9 @@ export default function StockMovesPage() {
               <td>{m.qty}</td>
               <td>{warehouseCode(m.source_warehouse_id)}</td>
               <td>{warehouseCode(m.dest_warehouse_id)}</td>
-              <td>{m.state}</td>
+              <td>
+                <StatusBadge status={m.state} />
+              </td>
               <td>
                 {canManage && m.state === 'draft' && (
                   <button onClick={() => validateMutation.mutate(m.id)}>Valider</button>

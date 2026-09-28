@@ -17,9 +17,11 @@ import HRPage from './pages/HRPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
 import LoginPage from './pages/LoginPage'
+import PartnerDetailPage from './pages/PartnerDetailPage'
 import PartnersPage from './pages/PartnersPage'
 import ProductsPage from './pages/ProductsPage'
 import PurchaseOrdersPage from './pages/PurchaseOrdersPage'
+import ReceivablesPage from './pages/ReceivablesPage'
 import ReportsPage from './pages/ReportsPage'
 import SaleOrdersPage from './pages/SaleOrdersPage'
 import StockInventoriesPage from './pages/StockInventoriesPage'
@@ -48,6 +50,7 @@ export default function App() {
               <Route index element={<BranchesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="partners" element={<PartnersPage />} />
+              <Route path="partners/:id" element={<PartnerDetailPage />} />
               <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
               <Route path="imports" element={<ImportsPage />} />
               <Route path="warehouses" element={<WarehousesPage />} />
@@ -63,6 +66,7 @@ export default function App() {
               <Route path="supplier-invoices" element={<SupplierInvoicesPage />} />
               <Route path="cash-registers" element={<CashRegistersPage />} />
               <Route path="bank-accounts" element={<BankAccountsPage />} />
+              <Route path="receivables" element={<ReceivablesPage />} />
               <Route path="hr" element={<HRPage />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="dashboard" element={<DashboardPage />} />

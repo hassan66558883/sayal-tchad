@@ -13,6 +13,7 @@ import {
   type PaymentMethod,
 } from '../api/finance'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 export default function CashRegistersPage() {
   const { hasRole } = useAuth()
@@ -119,7 +120,9 @@ export default function CashRegistersPage() {
           {sessions?.map((s) => (
             <tr key={s.id}>
               <td>{registers?.find((r) => r.id === s.register_id)?.name ?? s.register_id}</td>
-              <td>{s.state}</td>
+              <td>
+                <StatusBadge status={s.state} />
+              </td>
               <td>{s.opening_balance}</td>
               <td>{s.computed_balance}</td>
               <td>{s.closing_balance ?? '-'}</td>
@@ -202,7 +205,9 @@ export default function CashRegistersPage() {
               <td>{exp.category}</td>
               <td>{exp.amount}</td>
               <td>{exp.payment_method}</td>
-              <td>{exp.state}</td>
+              <td>
+                <StatusBadge status={exp.state} />
+              </td>
               <td>
                 {canManage && exp.state === 'draft' && (
                   <>

@@ -1,5 +1,6 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { CUSTOMER_TYPES, createPartner, listPartners } from '../api/partners'
 import { getSupplierBalance } from '../api/finance'
 import { getPartnerBalance } from '../api/sales'
@@ -76,9 +77,12 @@ export default function PartnersPage() {
           {partners?.map((p) => (
             <tr key={p.id}>
               <td>{p.reference}</td>
-              <td>{p.name}</td>
               <td>
-                {[p.is_customer && 'Client', p.is_supplier && 'Fournisseur'].filter(Boolean).join(' / ')}
+                <Link to={`/partners/${p.id}`}>{p.name}</Link>
+              </td>
+              <td style={{ display: 'flex', gap: 6 }}>
+                {p.is_customer && <span className="badge badge-gold">Client</span>}
+                {p.is_supplier && <span className="badge badge-muted">Fournisseur</span>}
               </td>
               <td>{p.phone ?? '-'}</td>
               <td>{p.is_customer ? (balanceById.get(p.id) ?? '...') : '-'}</td>

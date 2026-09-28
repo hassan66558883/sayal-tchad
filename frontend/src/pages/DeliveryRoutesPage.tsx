@@ -15,6 +15,7 @@ import {
 import { listSaleOrders } from '../api/sales'
 import { listWarehouses } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 export default function DeliveryRoutesPage() {
   const { hasRole } = useAuth()
@@ -85,11 +86,13 @@ export default function DeliveryRoutesPage() {
               <td>{vehicles?.find((v) => v.id === r.vehicle_id)?.name ?? r.vehicle_id}</td>
               <td>{warehouses?.find((w) => w.id === r.warehouse_id)?.name ?? '-'}</td>
               <td>{r.route_date}</td>
-              <td>{r.state}</td>
+              <td>
+                <StatusBadge status={r.state} />
+              </td>
               <td>
                 {r.deliveries.map((d) => (
-                  <div key={d.id}>
-                    {d.reference} ({d.state})
+                  <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    {d.reference} <StatusBadge status={d.state} />
                   </div>
                 ))}
                 {canManage && r.state === 'planifiee' && (

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Search } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import {
   createProduct,
@@ -21,6 +22,14 @@ export default function ProductsPage() {
   const { data: categories } = useQuery({ queryKey: ['product-categories'], queryFn: listProductCategories })
   const { data: uoms } = useQuery({ queryKey: ['uoms'], queryFn: listUoms })
   const { data: uomCategories } = useQuery({ queryKey: ['uom-categories'], queryFn: listUomCategories })
+
+  const [query, setQuery] = useState('')
+  const filteredProducts = products?.filter(
+    (p) =>
+      query.trim() === '' ||
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.reference.toLowerCase().includes(query.toLowerCase()),
+  )
 
   const [name, setName] = useState('')
   const [categoryId, setCategoryId] = useState('')
@@ -86,6 +95,10 @@ export default function ProductsPage() {
   return (
     <div>
       <h1>Produits</h1>
+      <div className="search-box" style={{ width: 320, maxWidth: '100%', marginBottom: 16 }}>
+        <Search size={15} className="search-icon" />
+        <input placeholder="Rechercher par nom ou reference..." value={query} onChange={(e) => setQuery(e.target.value)} />
+      </div>
       <table className="data-table">
         <thead>
           <tr>
@@ -96,7 +109,7 @@ export default function ProductsPage() {
           </tr>
         </thead>
         <tbody>
-          {products?.map((p) => (
+          {filteredProducts?.map((p) => (
             <tr key={p.id}>
               <td>{p.reference}</td>
               <td>{p.name}</td>

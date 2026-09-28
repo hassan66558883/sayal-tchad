@@ -12,6 +12,7 @@ import {
   terminateSaleOrder,
 } from '../api/sales'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 interface DraftLine {
   product_id: number
@@ -112,7 +113,9 @@ export default function SaleOrdersPage() {
               <td>{partners?.find((p) => p.id === o.customer_id)?.name ?? o.customer_id}</td>
               <td>{salesReps?.find((r) => r.id === o.sales_rep_id)?.name ?? '-'}</td>
               <td>{o.order_date}</td>
-              <td>{o.state}</td>
+              <td>
+                <StatusBadge status={o.state} />
+              </td>
               <td>{o.amount_total}</td>
               <td>
                 {canManage && o.state === 'devis' && (

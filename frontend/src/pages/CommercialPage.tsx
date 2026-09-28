@@ -9,6 +9,7 @@ import {
 } from '../api/commercial'
 import { listUsers } from '../api/users'
 import { useAuth } from '../auth/AuthContext'
+import ProgressBar from '../components/ProgressBar'
 
 function firstOfMonth(): string {
   const now = new Date()
@@ -146,7 +147,9 @@ export default function CommercialPage() {
               </td>
               <td>{t.target_amount}</td>
               <td>{t.achieved_amount}</td>
-              <td>{t.achievement_percent !== null ? `${t.achievement_percent.toFixed(1)}%` : '-'}</td>
+              <td>
+                <ProgressBar percent={t.achievement_percent} />
+              </td>
             </tr>
           ))}
         </tbody>

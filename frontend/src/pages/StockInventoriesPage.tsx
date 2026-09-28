@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { listProducts } from '../api/products'
 import { createStockInventory, listStockInventories, listWarehouses, validateStockInventory } from '../api/stock'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 interface DraftLine {
   product_id: number
@@ -72,7 +73,9 @@ export default function StockInventoriesPage() {
               <td>{inv.reference}</td>
               <td>{warehouseCode(inv.warehouse_id)}</td>
               <td>{inv.inventory_date}</td>
-              <td>{inv.state}</td>
+              <td>
+                <StatusBadge status={inv.state} />
+              </td>
               <td>
                 {inv.lines
                   .map((l) => `${productName(l.product_id)}: ${l.counted_qty} / ${l.theoretical_qty ?? '?'}`)

@@ -15,6 +15,7 @@ import {
 import { listPartners } from '../api/partners'
 import { listPurchaseOrders } from '../api/purchases'
 import { useAuth } from '../auth/AuthContext'
+import StatusBadge from '../components/StatusBadge'
 
 export default function SupplierInvoicesPage() {
   const { hasRole } = useAuth()
@@ -97,7 +98,9 @@ export default function SupplierInvoicesPage() {
               <td>{inv.reference}</td>
               <td>{inv.move_type === 'bill' ? 'Facture' : 'Avoir'}</td>
               <td>{partners?.find((p) => p.id === inv.supplier_id)?.name ?? inv.supplier_id}</td>
-              <td>{inv.payment_state}</td>
+              <td>
+                <StatusBadge status={inv.payment_state} />
+              </td>
               <td>{inv.amount_total}</td>
               <td>{inv.amount_paid}</td>
               <td>{inv.amount_due}</td>
@@ -192,7 +195,9 @@ export default function SupplierInvoicesPage() {
                 <td>{invoices?.find((i) => i.id === p.invoice_id)?.reference ?? p.invoice_id}</td>
                 <td>{p.amount}</td>
                 <td>{p.payment_method}</td>
-                <td>{p.state}</td>
+                <td>
+                  <StatusBadge status={p.state} />
+                </td>
                 <td>
                   {canManagePayments && (
                     <button onClick={() => confirmPaymentMutation.mutate(p.id)}>Confirmer</button>
