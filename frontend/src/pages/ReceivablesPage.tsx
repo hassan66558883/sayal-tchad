@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, Clock, FileWarning, Wallet } from 'lucide-react'
+import { AlertTriangle, Clock, FileWarning, HandCoins } from 'lucide-react'
 import { getReceivablesAging } from '../api/dashboard'
 
 const currencyFormatter = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
@@ -31,7 +31,7 @@ export default function ReceivablesPage() {
         <div className="kpi-card">
           <div className="kpi-top">
             <span className="kpi-icon warning">
-              <Wallet size={18} />
+              <HandCoins size={18} />
             </span>
           </div>
           <div className="kpi-value">{fcfa(totalDue)}</div>
