@@ -13,6 +13,7 @@ import {
   LandmarkIcon,
   LayoutDashboard,
   Menu,
+  Moon,
   Package,
   PackageCheck,
   Receipt,
@@ -20,6 +21,7 @@ import {
   Search,
   Ship,
   ShoppingCart,
+  Sun,
   Target,
   Truck,
   UserCog,
@@ -34,6 +36,27 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { listNotifications } from '../api/notifications'
 import { globalSearch, type SearchResults } from '../api/search'
 import { useAuth } from '../auth/AuthContext'
+import { getEffectiveTheme, setStoredTheme, type Theme } from '../theme'
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState<Theme>(() => getEffectiveTheme())
+
+  function toggle() {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
+    setStoredTheme(next)
+    setTheme(next)
+  }
+
+  return (
+    <button
+      className="notif-btn"
+      onClick={toggle}
+      title={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
+    >
+      {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+    </button>
+  )
+}
 
 const SEVERITY_ICON = {
   info: <Info size={15} />,
@@ -266,6 +289,7 @@ export default function AppLayout() {
           </button>
           <GlobalSearch />
           <div className="topbar-spacer" />
+          <ThemeToggle />
           <NotificationBell />
           <span className="user-avatar">{(user?.name ?? '?').slice(0, 1).toUpperCase()}</span>
           <span className="user-name">{user?.name}</span>

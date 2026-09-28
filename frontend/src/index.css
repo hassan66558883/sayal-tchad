@@ -47,8 +47,11 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* Dark theme values - applied when the OS/browser prefers dark AND the
+   user hasn't explicitly chosen light, OR when the user has explicitly
+   chosen dark via the topbar toggle (data-theme="dark" on <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --text: #d3d8e0;
     --text-h: #f3f5f8;
     --text-muted: #8b96a5;
@@ -82,6 +85,41 @@
     --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
+}
+
+:root[data-theme="dark"] {
+  --text: #d3d8e0;
+  --text-h: #f3f5f8;
+  --text-muted: #8b96a5;
+  --bg: #0b1220;
+  --panel-bg: #121a2b;
+  --border: #223047;
+
+  --accent: #4a7fb0;
+  --accent-hover: #5c92c4;
+  --accent-soft: rgba(74, 127, 176, 0.16);
+  --accent-ring: rgba(74, 127, 176, 0.3);
+
+  --secondary: #3f84a8;
+  --gold: #f2b705;
+  --gold-soft: rgba(242, 183, 5, 0.18);
+
+  --success: #22c55e;
+  --success-soft: rgba(34, 197, 94, 0.14);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.16);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.14);
+
+  --sidebar-bg: #101d30;
+  --sidebar-bg-2: #16293f;
+  --sidebar-text: rgba(255, 255, 255, 0.68);
+  --sidebar-active-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 * {
