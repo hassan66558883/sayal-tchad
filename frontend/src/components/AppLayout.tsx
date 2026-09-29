@@ -234,7 +234,7 @@ export default function AppLayout() {
           </button>
         </div>
         <nav>
-          <NavItem to="/" end icon={<Building2 size={17} />} label="Agences" />
+          <NavItem to="/agences" icon={<Building2 size={17} />} label="Agences" />
           {hasRole('direction_generale') && (
             <NavItem to="/dashboard" icon={<LayoutDashboard size={17} />} label="Tableau de bord" />
           )}

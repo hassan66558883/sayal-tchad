@@ -13,6 +13,7 @@ import DeliveriesPage from './pages/DeliveriesPage'
 import DeliveryRoutesPage from './pages/DeliveryRoutesPage'
 import FleetOperationsPage from './pages/FleetOperationsPage'
 import FleetPage from './pages/FleetPage'
+import HomePage from './pages/HomePage'
 import HRPage from './pages/HRPage'
 import ImportsPage from './pages/ImportsPage'
 import InvoicesPage from './pages/InvoicesPage'
@@ -47,7 +48,8 @@ export default function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<BranchesPage />} />
+              <Route index element={<HomePage />} />
+              <Route path="agences" element={<BranchesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="partners" element={<PartnersPage />} />
               <Route path="partners/:id" element={<PartnerDetailPage />} />
