@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import {
   AlertTriangle,
   Banknote,
+  CircleDollarSign,
   FilePlus,
+  HandCoins,
   Package,
   Receipt,
   ShoppingCart,
@@ -126,6 +128,53 @@ export default function DashboardPage() {
       <h1>Bonjour, {user?.name ?? ''}</h1>
       <p className="page-subtitle">Voici un apercu de l'activite de SAYAL sur la periode selectionnee.</p>
 
+      {!data ? (
+        <p>Chargement...</p>
+      ) : (
+        <div className="kpi-grid">
+          <KpiCard
+            icon={<CircleDollarSign size={18} />}
+            value={fcfa(data.sales.total_invoiced)}
+            label="Chiffre d'affaires facture"
+          />
+          <KpiCard
+            icon={<ShoppingCart size={18} />}
+            tone="gold"
+            value={fcfa(data.sales.total_confirmed_sales)}
+            label="Commandes confirmees"
+          />
+          <KpiCard icon={<Wallet size={18} />} tone="success" value={fcfa(data.sales.total_collected)} label="Encaisse" />
+          <KpiCard
+            icon={<HandCoins size={18} />}
+            tone="warning"
+            value={fcfa(data.finance.total_receivables)}
+            label="Creances clients"
+          />
+          <KpiCard
+            icon={<Receipt size={18} />}
+            tone="warning"
+            value={fcfa(data.finance.total_payables)}
+            label="Dettes fournisseurs"
+          />
+          <KpiCard
+            icon={<Banknote size={18} />}
+            tone="success"
+            value={fcfa(
+              data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0) +
+                data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0),
+            )}
+            label="Solde caisse + banque"
+          />
+          <KpiCard icon={<UsersRound size={18} />} value={String(data.hr.active_employee_count)} label="Employes actifs" />
+          <KpiCard
+            icon={<Truck size={18} />}
+            tone="gold"
+            value={String(data.distribution.open_delivery_routes)}
+            label="Tournees en cours"
+          />
+        </div>
+      )}
+
       <div className="quick-actions">
         <Link to="/sale-orders">
           <FilePlus size={15} /> Nouveau devis
@@ -158,53 +207,8 @@ export default function DashboardPage() {
         </label>
       </div>
 
-      {!data ? (
-        <p>Chargement...</p>
-      ) : (
+      {data && (
         <>
-          <div className="kpi-grid">
-            <KpiCard
-              icon={<Receipt size={18} />}
-              value={fcfa(data.sales.total_invoiced)}
-              label="Chiffre d'affaires facture"
-            />
-            <KpiCard
-              icon={<ShoppingCart size={18} />}
-              tone="gold"
-              value={fcfa(data.sales.total_confirmed_sales)}
-              label="Commandes confirmees"
-            />
-            <KpiCard icon={<Wallet size={18} />} tone="success" value={fcfa(data.sales.total_collected)} label="Encaisse" />
-            <KpiCard
-              icon={<AlertTriangle size={18} />}
-              tone="warning"
-              value={fcfa(data.finance.total_receivables)}
-              label="Creances clients"
-            />
-            <KpiCard
-              icon={<Receipt size={18} />}
-              tone="warning"
-              value={fcfa(data.finance.total_payables)}
-              label="Dettes fournisseurs"
-            />
-            <KpiCard
-              icon={<Banknote size={18} />}
-              tone="success"
-              value={fcfa(
-                data.finance.cash_sessions.reduce((sum, s) => sum + s.balance, 0) +
-                  data.finance.bank_accounts.reduce((sum, a) => sum + a.balance, 0),
-              )}
-              label="Solde caisse + banque"
-            />
-            <KpiCard icon={<UsersRound size={18} />} value={String(data.hr.active_employee_count)} label="Employes actifs" />
-            <KpiCard
-              icon={<Truck size={18} />}
-              tone="gold"
-              value={String(data.distribution.open_delivery_routes)}
-              label="Tournees en cours"
-            />
-          </div>
-
           <div className="panel">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h2 style={{ marginBottom: 0 }}>Evolution des ventes</h2>
