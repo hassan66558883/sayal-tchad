@@ -564,8 +564,7 @@ a {
   padding: 0 0 18px;
 }
 
-.sidebar.collapsed .brand span,
-.sidebar.collapsed .collapse-btn {
+.sidebar.collapsed .brand span {
   display: none;
 }
 
